@@ -1,0 +1,5021 @@
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://cdn.rawgit.com/sindresorhus/github-markdown-css/gh-pages/github-markdown.css">
+<style>
+	.markdown-body {
+		box-sizing: border-box;
+		min-width: 200px;
+		max-width: 980px;
+		margin: 0 auto;
+		padding: 45px;
+	}
+
+	@media (max-width: 767px) {
+		.markdown-body {
+			padding: 15px;
+		}
+	}
+</style>
+<article class="markdown-body">
+<pre><code>DELETE /__TESTUTILS__/purge
+</code></pre>
+<pre><code>200 OK
+
+"Purged all data!"
+</code></pre>
+<h1 id="article">Article</h1>
+<pre><code>POST /users
+
+{
+  "user": {
+    "email": "author-dh163w@email.com",
+    "username": "author-dh163w",
+    "password": "password"
+  }
+}
+</code></pre>
+<pre><code>200 OK
+
+{
+  "user": {
+    "email": "author-dh163w@email.com",
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImF1dGhvci1kaDE2M3ciLCJpYXQiOjE2MDMzMjc5NjIsImV4cCI6MTYwMzUwMDc2Mn0.oDvXBmfZ5aOLWPHOPiqZ1OZBgFbUrkt99TWAHBaGRQg",
+    "username": "author-dh163w",
+    "bio": "",
+    "image": ""
+  }
+}
+</code></pre>
+<pre><code>POST /users
+
+{
+  "user": {
+    "email": "authoress-ampas3@email.com",
+    "username": "authoress-ampas3",
+    "password": "password"
+  }
+}
+</code></pre>
+<pre><code>200 OK
+
+{
+  "user": {
+    "email": "authoress-ampas3@email.com",
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImF1dGhvcmVzcy1hbXBhczMiLCJpYXQiOjE2MDMzMjc5NjIsImV4cCI6MTYwMzUwMDc2Mn0.1FD79QSUJz_2IRH0GKcD8pByEdMnu2eIztvG1NeiRIM",
+    "username": "authoress-ampas3",
+    "bio": "",
+    "image": ""
+  }
+}
+</code></pre>
+<pre><code>POST /users
+
+{
+  "user": {
+    "email": "non-author-bn1we9@email.com",
+    "username": "non-author-bn1we9",
+    "password": "password"
+  }
+}
+</code></pre>
+<pre><code>200 OK
+
+{
+  "user": {
+    "email": "non-author-bn1we9@email.com",
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Im5vbi1hdXRob3ItYm4xd2U5IiwiaWF0IjoxNjAzMzI3OTYyLCJleHAiOjE2MDM1MDA3NjJ9.FQy5rjTjbgNzkQraNINbtqnum6ZiFjzikWhxJz97p8g",
+    "username": "non-author-bn1we9",
+    "bio": "",
+    "image": ""
+  }
+}
+</code></pre>
+<h2 id="create">Create</h2>
+<h3 id="shouldcreatearticle">should create article</h3>
+<pre><code>POST /articles
+
+{
+  "article": {
+    "title": "title",
+    "description": "description",
+    "body": "body"
+  }
+}
+</code></pre>
+<pre><code>200 OK
+
+{
+  "article": {
+    "slug": "title-72y758",
+    "title": "title",
+    "description": "description",
+    "body": "body",
+    "createdAt": 1603327962373,
+    "updatedAt": 1603327962373,
+    "author": {
+      "username": "author-dh163w",
+      "bio": "",
+      "image": "",
+      "following": false
+    },
+    "tagList": [],
+    "favorited": false,
+    "favoritesCount": 0
+  }
+}
+</code></pre>
+<h3 id="shouldcreatearticlewithtags">should create article with tags</h3>
+<pre><code>POST /articles
+
+{
+  "article": {
+    "title": "title",
+    "description": "description",
+    "body": "body",
+    "tagList": [
+      "tag_a",
+      "tag_b"
+    ]
+  }
+}
+</code></pre>
+<pre><code>200 OK
+
+{
+  "article": {
+    "slug": "title-il6oic",
+    "title": "title",
+    "description": "description",
+    "body": "body",
+    "createdAt": 1603327962432,
+    "updatedAt": 1603327962432,
+    "author": {
+      "username": "author-dh163w",
+      "bio": "",
+      "image": "",
+      "following": false
+    },
+    "tagList": [
+      "tag_a",
+      "tag_b"
+    ],
+    "favorited": false,
+    "favoritesCount": 0
+  }
+}
+</code></pre>
+<h3 id="shoulddisallowunauthenticateduser">should disallow unauthenticated user</h3>
+<pre><code>POST /articles
+
+{}
+</code></pre>
+<pre><code>422 Unprocessable Entity
+
+{
+  "errors": {
+    "body": [
+      "Must be logged in."
+    ]
+  }
+}
+</code></pre>
+<h3 id="shouldenforcerequiredfields">should enforce required fields</h3>
+<pre><code>POST /articles
+
+{}
+</code></pre>
+<pre><code>422 Unprocessable Entity
+
+{
+  "errors": {
+    "body": [
+      "Article must be specified."
+    ]
+  }
+}
+</code></pre>
+<pre><code>POST /articles
+
+{
+  "article": {}
+}
+</code></pre>
+<pre><code>422 Unprocessable Entity
+
+{
+  "errors": {
+    "body": [
+      "title must be specified."
+    ]
+  }
+}
+</code></pre>
+<pre><code>POST /articles
+
+{
+  "article": {
+    "title": "title"
+  }
+}
+</code></pre>
+<pre><code>422 Unprocessable Entity
+
+{
+  "errors": {
+    "body": [
+      "description must be specified."
+    ]
+  }
+}
+</code></pre>
+<pre><code>POST /articles
+
+{
+  "article": {
+    "title": "title",
+    "description": "description"
+  }
+}
+</code></pre>
+<pre><code>422 Unprocessable Entity
+
+{
+  "errors": {
+    "body": [
+      "body must be specified."
+    ]
+  }
+}
+</code></pre>
+<h2 id="get">Get</h2>
+<h3 id="shouldgetarticlebyslug">should get article by slug</h3>
+<pre><code>GET /articles/title-72y758
+</code></pre>
+<pre><code>200 OK
+
+{
+  "article": {
+    "createdAt": 1603327962373,
+    "author": {
+      "username": "author-dh163w",
+      "bio": "",
+      "image": "",
+      "following": false
+    },
+    "description": "description",
+    "title": "title",
+    "body": "body",
+    "slug": "title-72y758",
+    "updatedAt": 1603327962373,
+    "tagList": [],
+    "favoritesCount": 0,
+    "favorited": false
+  }
+}
+</code></pre>
+<h3 id="shouldgetarticlewithtagsbyslug">should get article with tags by slug</h3>
+<pre><code>GET /articles/title-il6oic
+</code></pre>
+<pre><code>200 OK
+
+{
+  "article": {
+    "tagList": [
+      "tag_a",
+      "tag_b"
+    ],
+    "createdAt": 1603327962432,
+    "author": {
+      "username": "author-dh163w",
+      "bio": "",
+      "image": "",
+      "following": false
+    },
+    "description": "description",
+    "title": "title",
+    "body": "body",
+    "slug": "title-il6oic",
+    "updatedAt": 1603327962432,
+    "favoritesCount": 0,
+    "favorited": false
+  }
+}
+</code></pre>
+<h3 id="shoulddisallowunknownslug">should disallow unknown slug</h3>
+<pre><code>GET /articles/bqwqbr
+</code></pre>
+<pre><code>422 Unprocessable Entity
+
+{
+  "errors": {
+    "body": [
+      "Article not found: [bqwqbr]"
+    ]
+  }
+}
+</code></pre>
+<h2 id="update">Update</h2>
+<h3 id="shouldupdatearticle">should update article</h3>
+<pre><code>PUT /articles/title-il6oic
+
+{
+  "article": {
+    "title": "newtitle"
+  }
+}
+</code></pre>
+<pre><code>200 OK
+
+{
+  "article": {
+    "tagList": [
+      "tag_a",
+      "tag_b"
+    ],
+    "createdAt": 1603327962432,
+    "author": {
+      "username": "author-dh163w",
+      "bio": "",
+      "image": "",
+      "following": false
+    },
+    "description": "description",
+    "title": "newtitle",
+    "body": "body",
+    "slug": "title-il6oic",
+    "updatedAt": 1603327962432,
+    "favoritesCount": 0,
+    "favorited": false
+  }
+}
+</code></pre>
+<pre><code>PUT /articles/title-il6oic
+
+{
+  "article": {
+    "description": "newdescription"
+  }
+}
+</code></pre>
+<pre><code>200 OK
+
+{
+  "article": {
+    "tagList": [
+      "tag_a",
+      "tag_b"
+    ],
+    "createdAt": 1603327962432,
+    "author": {
+      "username": "author-dh163w",
+      "bio": "",
+      "image": "",
+      "following": false
+    },
+    "description": "newdescription",
+    "title": "newtitle",
+    "body": "body",
+    "slug": "title-il6oic",
+    "updatedAt": 1603327962432,
+    "favoritesCount": 0,
+    "favorited": false
+  }
+}
+</code></pre>
+<pre><code>PUT /articles/title-il6oic
+
+{
+  "article": {
+    "body": "newbody"
+  }
+}
+</code></pre>
+<pre><code>200 OK
+
+{
+  "article": {
+    "tagList": [
+      "tag_a",
+      "tag_b"
+    ],
+    "createdAt": 1603327962432,
+    "author": {
+      "username": "author-dh163w",
+      "bio": "",
+      "image": "",
+      "following": false
+    },
+    "description": "newdescription",
+    "title": "newtitle",
+    "body": "newbody",
+    "slug": "title-il6oic",
+    "updatedAt": 1603327962432,
+    "favoritesCount": 0,
+    "favorited": false
+  }
+}
+</code></pre>
+<h3 id="shoulddisallowmissingmutation">should disallow missing mutation</h3>
+<pre><code>PUT /articles/title-il6oic
+
+{}
+</code></pre>
+<pre><code>422 Unprocessable Entity
+
+{
+  "errors": {
+    "body": [
+      "Article mutation must be specified."
+    ]
+  }
+}
+</code></pre>
+<h3 id="shoulddisallowemptymutation">should disallow empty mutation</h3>
+<pre><code>PUT /articles/title-il6oic
+
+{
+  "article": {}
+}
+</code></pre>
+<pre><code>422 Unprocessable Entity
+
+{
+  "errors": {
+    "body": [
+      "At least one field must be specified: [title, description, article]."
+    ]
+  }
+}
+</code></pre>
+<h3 id="shoulddisallowunauthenticatedupdate">should disallow unauthenticated update</h3>
+<pre><code>PUT /articles/title-il6oic
+
+{
+  "article": {
+    "title": "newtitle"
+  }
+}
+</code></pre>
+<pre><code>422 Unprocessable Entity
+
+{
+  "errors": {
+    "body": [
+      "Must be logged in."
+    ]
+  }
+}
+</code></pre>
+<h3 id="shoulddisallowupdatingnonexistentarticle">should disallow updating non-existent article</h3>
+<pre><code>PUT /articles/foo-title-il6oic
+
+{
+  "article": {
+    "title": "newtitle"
+  }
+}
+</code></pre>
+<pre><code>422 Unprocessable Entity
+
+{
+  "errors": {
+    "body": [
+      "Article not found: [foo-title-il6oic]"
+    ]
+  }
+}
+</code></pre>
+<h3 id="shoulddisallownonauthorfromupdating">should disallow non-author from updating</h3>
+<pre><code>PUT /articles/title-il6oic
+
+{
+  "article": {
+    "title": "newtitle"
+  }
+}
+</code></pre>
+<pre><code>422 Unprocessable Entity
+
+{
+  "errors": {
+    "body": [
+      "Article can only be updated by author: [author-dh163w]"
+    ]
+  }
+}
+</code></pre>
+<h2 id="favorite">Favorite</h2>
+<h3 id="shouldfavoritearticle">should favorite article</h3>
+<pre><code>POST /articles/title-72y758/favorite
+
+{}
+</code></pre>
+<pre><code>200 OK
+
+{
+  "article": {
+    "createdAt": 1603327962373,
+    "author": {
+      "username": "author-dh163w",
+      "bio": "",
+      "image": "",
+      "following": false
+    },
+    "description": "description",
+    "title": "title",
+    "body": "body",
+    "slug": "title-72y758",
+    "updatedAt": 1603327962373,
+    "favoritedBy": [
+      "non-author-bn1we9"
+    ],
+    "favoritesCount": 1,
+    "tagList": [],
+    "favorited": true
+  }
+}
+</code></pre>
+<pre><code>GET /articles/title-72y758
+</code></pre>
+<pre><code>200 OK
+
+{
+  "article": {
+    "createdAt": 1603327962373,
+    "author": {
+      "username": "author-dh163w",
+      "bio": "",
+      "image": "",
+      "following": false
+    },
+    "description": "description",
+    "title": "title",
+    "body": "body",
+    "favoritesCount": 1,
+    "slug": "title-72y758",
+    "updatedAt": 1603327962373,
+    "tagList": [],
+    "favorited": true
+  }
+}
+</code></pre>
+<h3 id="shoulddisallowfavoritingbyunauthenticateduser">should disallow favoriting by unauthenticated user</h3>
+<pre><code>POST /articles/title-72y758/favorite
+
+{}
+</code></pre>
+<pre><code>422 Unprocessable Entity
+
+{
+  "errors": {
+    "body": [
+      "Must be logged in."
+    ]
+  }
+}
+</code></pre>
+<h3 id="shoulddisallowfavoritingunknownarticle">should disallow favoriting unknown article</h3>
+<pre><code>POST /articles/title-72y758_foo/favorite
+
+{}
+</code></pre>
+<pre><code>422 Unprocessable Entity
+
+{
+  "errors": {
+    "body": [
+      "Article not found: [title-72y758_foo]"
+    ]
+  }
+}
+</code></pre>
+<h3 id="shouldunfavoritearticle">should unfavorite article</h3>
+<pre><code>DELETE /articles/title-72y758/favorite
+</code></pre>
+<pre><code>200 OK
+
+{
+  "article": {
+    "createdAt": 1603327962373,
+    "author": {
+      "username": "author-dh163w",
+      "bio": "",
+      "image": "",
+      "following": false
+    },
+    "description": "description",
+    "title": "title",
+    "body": "body",
+    "favoritesCount": 0,
+    "slug": "title-72y758",
+    "updatedAt": 1603327962373,
+    "tagList": [],
+    "favorited": false
+  }
+}
+</code></pre>
+<h2 id="delete">Delete</h2>
+<h3 id="shoulddeletearticle">should delete article</h3>
+<pre><code>DELETE /articles/title-72y758
+</code></pre>
+<pre><code>200 OK
+
+{}
+</code></pre>
+<pre><code>GET /articles/title-72y758
+</code></pre>
+<pre><code>422 Unprocessable Entity
+
+{
+  "errors": {
+    "body": [
+      "Article not found: [title-72y758]"
+    ]
+  }
+}
+</code></pre>
+<h3 id="shoulddisallowdeletingbyunauthenticateduser">should disallow deleting by unauthenticated user</h3>
+<pre><code>DELETE /articles/foo
+</code></pre>
+<pre><code>422 Unprocessable Entity
+
+{
+  "errors": {
+    "body": [
+      "Must be logged in."
+    ]
+  }
+}
+</code></pre>
+<h3 id="shoulddisallowdeletingunknownarticle">should disallow deleting unknown article</h3>
+<pre><code>DELETE /articles/foobar
+</code></pre>
+<pre><code>422 Unprocessable Entity
+
+{
+  "errors": {
+    "body": [
+      "Article not found: [foobar]"
+    ]
+  }
+}
+</code></pre>
+<h3 id="shoulddisallowdeletingarticlebynonauthor">should disallow deleting article by non-author</h3>
+<pre><code>DELETE /articles/title-il6oic
+</code></pre>
+<pre><code>422 Unprocessable Entity
+
+{
+  "errors": {
+    "body": [
+      "Article can only be deleted by author: [author-dh163w]"
+    ]
+  }
+}
+</code></pre>
+<h2 id="list">List</h2>
+<pre><code>POST /articles
+
+{
+  "article": {
+    "title": "title",
+    "description": "description",
+    "body": "body",
+    "tagList": [
+      "ow7zto",
+      "tag_0",
+      "tag_mod_2_0",
+      "tag_mod_3_0"
+    ]
+  }
+}
+</code></pre>
+<pre><code>200 OK
+
+{
+  "article": {
+    "slug": "title-gz1cgd",
+    "title": "title",
+    "description": "description",
+    "body": "body",
+    "createdAt": 1603327963446,
+    "updatedAt": 1603327963446,
+    "author": {
+      "username": "authoress-ampas3",
+      "bio": "",
+      "image": "",
+      "following": false
+    },
+    "tagList": [
+      "ow7zto",
+      "tag_0",
+      "tag_mod_2_0",
+      "tag_mod_3_0"
+    ],
+    "favorited": false,
+    "favoritesCount": 0
+  }
+}
+</code></pre>
+<pre><code>POST /articles
+
+{
+  "article": {
+    "title": "title",
+    "description": "description",
+    "body": "body",
+    "tagList": [
+      "90y5rm",
+      "tag_1",
+      "tag_mod_2_1",
+      "tag_mod_3_1"
+    ]
+  }
+}
+</code></pre>
+<pre><code>200 OK
+
+{
+  "article": {
+    "slug": "title-rx9ax6",
+    "title": "title",
+    "description": "description",
+    "body": "body",
+    "createdAt": 1603327963471,
+    "updatedAt": 1603327963471,
+    "author": {
+      "username": "author-dh163w",
+      "bio": "",
+      "image": "",
+      "following": false
+    },
+    "tagList": [
+      "90y5rm",
+      "tag_1",
+      "tag_mod_2_1",
+      "tag_mod_3_1"
+    ],
+    "favorited": false,
+    "favoritesCount": 0
+  }
+}
+</code></pre>
+<pre><code>POST /articles
+
+{
+  "article": {
+    "title": "title",
+    "description": "description",
+    "body": "body",
+    "tagList": [
+      "lv8gen",
+      "tag_2",
+      "tag_mod_2_0",
+      "tag_mod_3_2"
+    ]
+  }
+}
+</code></pre>
+<pre><code>200 OK
+
+{
+  "article": {
+    "slug": "title-t2wr94",
+    "title": "title",
+    "description": "description",
+    "body": "body",
+    "createdAt": 1603327963509,
+    "updatedAt": 1603327963509,
+    "author": {
+      "username": "authoress-ampas3",
+      "bio": "",
+      "image": "",
+      "following": false
+    },
+    "tagList": [
+      "lv8gen",
+      "tag_2",
+      "tag_mod_2_0",
+      "tag_mod_3_2"
+    ],
+    "favorited": false,
+    "favoritesCount": 0
+  }
+}
+</code></pre>
+<pre><code>POST /articles
+
+{
+  "article": {
+    "title": "title",
+    "description": "description",
+    "body": "body",
+    "tagList": [
+      "3vyebr",
+      "tag_3",
+      "tag_mod_2_1",
+      "tag_mod_3_0"
+    ]
+  }
+}
+</code></pre>
+<pre><code>200 OK
+
+{
+  "article": {
+    "slug": "title-lub3nd",
+    "title": "title",
+    "description": "description",
+    "body": "body",
+    "createdAt": 1603327963535,
+    "updatedAt": 1603327963535,
+    "author": {
+      "username": "author-dh163w",
+      "bio": "",
+      "image": "",
+      "following": false
+    },
+    "tagList": [
+      "3vyebr",
+      "tag_3",
+      "tag_mod_2_1",
+      "tag_mod_3_0"
+    ],
+    "favorited": false,
+    "favoritesCount": 0
+  }
+}
+</code></pre>
+<pre><code>POST /articles
+
+{
+  "article": {
+    "title": "title",
+    "description": "description",
+    "body": "body",
+    "tagList": [
+      "mc0ron",
+      "tag_4",
+      "tag_mod_2_0",
+      "tag_mod_3_1"
+    ]
+  }
+}
+</code></pre>
+<pre><code>200 OK
+
+{
+  "article": {
+    "slug": "title-m6fzur",
+    "title": "title",
+    "description": "description",
+    "body": "body",
+    "createdAt": 1603327963575,
+    "updatedAt": 1603327963575,
+    "author": {
+      "username": "authoress-ampas3",
+      "bio": "",
+      "image": "",
+      "following": false
+    },
+    "tagList": [
+      "mc0ron",
+      "tag_4",
+      "tag_mod_2_0",
+      "tag_mod_3_1"
+    ],
+    "favorited": false,
+    "favoritesCount": 0
+  }
+}
+</code></pre>
+<pre><code>POST /articles
+
+{
+  "article": {
+    "title": "title",
+    "description": "description",
+    "body": "body",
+    "tagList": [
+      "vfkq4l",
+      "tag_5",
+      "tag_mod_2_1",
+      "tag_mod_3_2"
+    ]
+  }
+}
+</code></pre>
+<pre><code>200 OK
+
+{
+  "article": {
+    "slug": "title-6uyd91",
+    "title": "title",
+    "description": "description",
+    "body": "body",
+    "createdAt": 1603327963621,
+    "updatedAt": 1603327963621,
+    "author": {
+      "username": "author-dh163w",
+      "bio": "",
+      "image": "",
+      "following": false
+    },
+    "tagList": [
+      "vfkq4l",
+      "tag_5",
+      "tag_mod_2_1",
+      "tag_mod_3_2"
+    ],
+    "favorited": false,
+    "favoritesCount": 0
+  }
+}
+</code></pre>
+<pre><code>POST /articles
+
+{
+  "article": {
+    "title": "title",
+    "description": "description",
+    "body": "body",
+    "tagList": [
+      "11gc7a",
+      "tag_6",
+      "tag_mod_2_0",
+      "tag_mod_3_0"
+    ]
+  }
+}
+</code></pre>
+<pre><code>200 OK
+
+{
+  "article": {
+    "slug": "title-2rmbqn",
+    "title": "title",
+    "description": "description",
+    "body": "body",
+    "createdAt": 1603327963667,
+    "updatedAt": 1603327963667,
+    "author": {
+      "username": "authoress-ampas3",
+      "bio": "",
+      "image": "",
+      "following": false
+    },
+    "tagList": [
+      "11gc7a",
+      "tag_6",
+      "tag_mod_2_0",
+      "tag_mod_3_0"
+    ],
+    "favorited": false,
+    "favoritesCount": 0
+  }
+}
+</code></pre>
+<pre><code>POST /articles
+
+{
+  "article": {
+    "title": "title",
+    "description": "description",
+    "body": "body",
+    "tagList": [
+      "33ld2w",
+      "tag_7",
+      "tag_mod_2_1",
+      "tag_mod_3_1"
+    ]
+  }
+}
+</code></pre>
+<pre><code>200 OK
+
+{
+  "article": {
+    "slug": "title-15uyd7",
+    "title": "title",
+    "description": "description",
+    "body": "body",
+    "createdAt": 1603327963723,
+    "updatedAt": 1603327963723,
+    "author": {
+      "username": "author-dh163w",
+      "bio": "",
+      "image": "",
+      "following": false
+    },
+    "tagList": [
+      "33ld2w",
+      "tag_7",
+      "tag_mod_2_1",
+      "tag_mod_3_1"
+    ],
+    "favorited": false,
+    "favoritesCount": 0
+  }
+}
+</code></pre>
+<pre><code>POST /articles
+
+{
+  "article": {
+    "title": "title",
+    "description": "description",
+    "body": "body",
+    "tagList": [
+      "poru3j",
+      "tag_8",
+      "tag_mod_2_0",
+      "tag_mod_3_2"
+    ]
+  }
+}
+</code></pre>
+<pre><code>200 OK
+
+{
+  "article": {
+    "slug": "title-hi6h76",
+    "title": "title",
+    "description": "description",
+    "body": "body",
+    "createdAt": 1603327963770,
+    "updatedAt": 1603327963770,
+    "author": {
+      "username": "authoress-ampas3",
+      "bio": "",
+      "image": "",
+      "following": false
+    },
+    "tagList": [
+      "poru3j",
+      "tag_8",
+      "tag_mod_2_0",
+      "tag_mod_3_2"
+    ],
+    "favorited": false,
+    "favoritesCount": 0
+  }
+}
+</code></pre>
+<pre><code>POST /articles
+
+{
+  "article": {
+    "title": "title",
+    "description": "description",
+    "body": "body",
+    "tagList": [
+      "wsq3cu",
+      "tag_9",
+      "tag_mod_2_1",
+      "tag_mod_3_0"
+    ]
+  }
+}
+</code></pre>
+<pre><code>200 OK
+
+{
+  "article": {
+    "slug": "title-lvrnin",
+    "title": "title",
+    "description": "description",
+    "body": "body",
+    "createdAt": 1603327963803,
+    "updatedAt": 1603327963803,
+    "author": {
+      "username": "author-dh163w",
+      "bio": "",
+      "image": "",
+      "following": false
+    },
+    "tagList": [
+      "wsq3cu",
+      "tag_9",
+      "tag_mod_2_1",
+      "tag_mod_3_0"
+    ],
+    "favorited": false,
+    "favoritesCount": 0
+  }
+}
+</code></pre>
+<pre><code>POST /articles
+
+{
+  "article": {
+    "title": "title",
+    "description": "description",
+    "body": "body",
+    "tagList": [
+      "im1369",
+      "tag_10",
+      "tag_mod_2_0",
+      "tag_mod_3_1"
+    ]
+  }
+}
+</code></pre>
+<pre><code>200 OK
+
+{
+  "article": {
+    "slug": "title-ftm7qj",
+    "title": "title",
+    "description": "description",
+    "body": "body",
+    "createdAt": 1603327963839,
+    "updatedAt": 1603327963839,
+    "author": {
+      "username": "authoress-ampas3",
+      "bio": "",
+      "image": "",
+      "following": false
+    },
+    "tagList": [
+      "im1369",
+      "tag_10",
+      "tag_mod_2_0",
+      "tag_mod_3_1"
+    ],
+    "favorited": false,
+    "favoritesCount": 0
+  }
+}
+</code></pre>
+<pre><code>POST /articles
+
+{
+  "article": {
+    "title": "title",
+    "description": "description",
+    "body": "body",
+    "tagList": [
+      "j2fpyt",
+      "tag_11",
+      "tag_mod_2_1",
+      "tag_mod_3_2"
+    ]
+  }
+}
+</code></pre>
+<pre><code>200 OK
+
+{
+  "article": {
+    "slug": "title-sg8jm9",
+    "title": "title",
+    "description": "description",
+    "body": "body",
+    "createdAt": 1603327963865,
+    "updatedAt": 1603327963865,
+    "author": {
+      "username": "author-dh163w",
+      "bio": "",
+      "image": "",
+      "following": false
+    },
+    "tagList": [
+      "j2fpyt",
+      "tag_11",
+      "tag_mod_2_1",
+      "tag_mod_3_2"
+    ],
+    "favorited": false,
+    "favoritesCount": 0
+  }
+}
+</code></pre>
+<pre><code>POST /articles
+
+{
+  "article": {
+    "title": "title",
+    "description": "description",
+    "body": "body",
+    "tagList": [
+      "3ltll2",
+      "tag_12",
+      "tag_mod_2_0",
+      "tag_mod_3_0"
+    ]
+  }
+}
+</code></pre>
+<pre><code>200 OK
+
+{
+  "article": {
+    "slug": "title-cvg84b",
+    "title": "title",
+    "description": "description",
+    "body": "body",
+    "createdAt": 1603327963890,
+    "updatedAt": 1603327963890,
+    "author": {
+      "username": "authoress-ampas3",
+      "bio": "",
+      "image": "",
+      "following": false
+    },
+    "tagList": [
+      "3ltll2",
+      "tag_12",
+      "tag_mod_2_0",
+      "tag_mod_3_0"
+    ],
+    "favorited": false,
+    "favoritesCount": 0
+  }
+}
+</code></pre>
+<pre><code>POST /articles
+
+{
+  "article": {
+    "title": "title",
+    "description": "description",
+    "body": "body",
+    "tagList": [
+      "mz6frb",
+      "tag_13",
+      "tag_mod_2_1",
+      "tag_mod_3_1"
+    ]
+  }
+}
+</code></pre>
+<pre><code>200 OK
+
+{
+  "article": {
+    "slug": "title-jyh906",
+    "title": "title",
+    "description": "description",
+    "body": "body",
+    "createdAt": 1603327963919,
+    "updatedAt": 1603327963919,
+    "author": {
+      "username": "author-dh163w",
+      "bio": "",
+      "image": "",
+      "following": false
+    },
+    "tagList": [
+      "mz6frb",
+      "tag_13",
+      "tag_mod_2_1",
+      "tag_mod_3_1"
+    ],
+    "favorited": false,
+    "favoritesCount": 0
+  }
+}
+</code></pre>
+<pre><code>POST /articles
+
+{
+  "article": {
+    "title": "title",
+    "description": "description",
+    "body": "body",
+    "tagList": [
+      "9j01da",
+      "tag_14",
+      "tag_mod_2_0",
+      "tag_mod_3_2"
+    ]
+  }
+}
+</code></pre>
+<pre><code>200 OK
+
+{
+  "article": {
+    "slug": "title-9wau76",
+    "title": "title",
+    "description": "description",
+    "body": "body",
+    "createdAt": 1603327963944,
+    "updatedAt": 1603327963944,
+    "author": {
+      "username": "authoress-ampas3",
+      "bio": "",
+      "image": "",
+      "following": false
+    },
+    "tagList": [
+      "9j01da",
+      "tag_14",
+      "tag_mod_2_0",
+      "tag_mod_3_2"
+    ],
+    "favorited": false,
+    "favoritesCount": 0
+  }
+}
+</code></pre>
+<pre><code>POST /articles
+
+{
+  "article": {
+    "title": "title",
+    "description": "description",
+    "body": "body",
+    "tagList": [
+      "15tkih",
+      "tag_15",
+      "tag_mod_2_1",
+      "tag_mod_3_0"
+    ]
+  }
+}
+</code></pre>
+<pre><code>200 OK
+
+{
+  "article": {
+    "slug": "title-yc56tb",
+    "title": "title",
+    "description": "description",
+    "body": "body",
+    "createdAt": 1603327963968,
+    "updatedAt": 1603327963968,
+    "author": {
+      "username": "author-dh163w",
+      "bio": "",
+      "image": "",
+      "following": false
+    },
+    "tagList": [
+      "15tkih",
+      "tag_15",
+      "tag_mod_2_1",
+      "tag_mod_3_0"
+    ],
+    "favorited": false,
+    "favoritesCount": 0
+  }
+}
+</code></pre>
+<pre><code>POST /articles
+
+{
+  "article": {
+    "title": "title",
+    "description": "description",
+    "body": "body",
+    "tagList": [
+      "s8i3r4",
+      "tag_16",
+      "tag_mod_2_0",
+      "tag_mod_3_1"
+    ]
+  }
+}
+</code></pre>
+<pre><code>200 OK
+
+{
+  "article": {
+    "slug": "title-vb32az",
+    "title": "title",
+    "description": "description",
+    "body": "body",
+    "createdAt": 1603327963995,
+    "updatedAt": 1603327963995,
+    "author": {
+      "username": "authoress-ampas3",
+      "bio": "",
+      "image": "",
+      "following": false
+    },
+    "tagList": [
+      "s8i3r4",
+      "tag_16",
+      "tag_mod_2_0",
+      "tag_mod_3_1"
+    ],
+    "favorited": false,
+    "favoritesCount": 0
+  }
+}
+</code></pre>
+<pre><code>POST /articles
+
+{
+  "article": {
+    "title": "title",
+    "description": "description",
+    "body": "body",
+    "tagList": [
+      "hu5y7x",
+      "tag_17",
+      "tag_mod_2_1",
+      "tag_mod_3_2"
+    ]
+  }
+}
+</code></pre>
+<pre><code>200 OK
+
+{
+  "article": {
+    "slug": "title-v1j78m",
+    "title": "title",
+    "description": "description",
+    "body": "body",
+    "createdAt": 1603327964023,
+    "updatedAt": 1603327964023,
+    "author": {
+      "username": "author-dh163w",
+      "bio": "",
+      "image": "",
+      "following": false
+    },
+    "tagList": [
+      "hu5y7x",
+      "tag_17",
+      "tag_mod_2_1",
+      "tag_mod_3_2"
+    ],
+    "favorited": false,
+    "favoritesCount": 0
+  }
+}
+</code></pre>
+<pre><code>POST /articles
+
+{
+  "article": {
+    "title": "title",
+    "description": "description",
+    "body": "body",
+    "tagList": [
+      "7p4ozm",
+      "tag_18",
+      "tag_mod_2_0",
+      "tag_mod_3_0"
+    ]
+  }
+}
+</code></pre>
+<pre><code>200 OK
+
+{
+  "article": {
+    "slug": "title-voianx",
+    "title": "title",
+    "description": "description",
+    "body": "body",
+    "createdAt": 1603327964048,
+    "updatedAt": 1603327964048,
+    "author": {
+      "username": "authoress-ampas3",
+      "bio": "",
+      "image": "",
+      "following": false
+    },
+    "tagList": [
+      "7p4ozm",
+      "tag_18",
+      "tag_mod_2_0",
+      "tag_mod_3_0"
+    ],
+    "favorited": false,
+    "favoritesCount": 0
+  }
+}
+</code></pre>
+<pre><code>POST /articles
+
+{
+  "article": {
+    "title": "title",
+    "description": "description",
+    "body": "body",
+    "tagList": [
+      "lehgsw",
+      "tag_19",
+      "tag_mod_2_1",
+      "tag_mod_3_1"
+    ]
+  }
+}
+</code></pre>
+<pre><code>200 OK
+
+{
+  "article": {
+    "slug": "title-f1vhfw",
+    "title": "title",
+    "description": "description",
+    "body": "body",
+    "createdAt": 1603327964083,
+    "updatedAt": 1603327964083,
+    "author": {
+      "username": "author-dh163w",
+      "bio": "",
+      "image": "",
+      "following": false
+    },
+    "tagList": [
+      "lehgsw",
+      "tag_19",
+      "tag_mod_2_1",
+      "tag_mod_3_1"
+    ],
+    "favorited": false,
+    "favoritesCount": 0
+  }
+}
+</code></pre>
+<h3 id="shouldlistarticles">should list articles</h3>
+<pre><code>GET /articles
+</code></pre>
+<pre><code>200 OK
+
+{
+  "articles": [
+    {
+      "tagList": [
+        "lehgsw",
+        "tag_19",
+        "tag_mod_2_1",
+        "tag_mod_3_1"
+      ],
+      "createdAt": 1603327964083,
+      "author": {
+        "username": "author-dh163w",
+        "bio": "",
+        "image": "",
+        "following": false
+      },
+      "description": "description",
+      "title": "title",
+      "body": "body",
+      "slug": "title-f1vhfw",
+      "updatedAt": 1603327964083,
+      "favoritesCount": 0,
+      "favorited": false
+    },
+    {
+      "tagList": [
+        "7p4ozm",
+        "tag_18",
+        "tag_mod_2_0",
+        "tag_mod_3_0"
+      ],
+      "createdAt": 1603327964048,
+      "author": {
+        "username": "authoress-ampas3",
+        "bio": "",
+        "image": "",
+        "following": false
+      },
+      "description": "description",
+      "title": "title",
+      "body": "body",
+      "slug": "title-voianx",
+      "updatedAt": 1603327964048,
+      "favoritesCount": 0,
+      "favorited": false
+    },
+    {
+      "tagList": [
+        "hu5y7x",
+        "tag_17",
+        "tag_mod_2_1",
+        "tag_mod_3_2"
+      ],
+      "createdAt": 1603327964023,
+      "author": {
+        "username": "author-dh163w",
+        "bio": "",
+        "image": "",
+        "following": false
+      },
+      "description": "description",
+      "title": "title",
+      "body": "body",
+      "slug": "title-v1j78m",
+      "updatedAt": 1603327964023,
+      "favoritesCount": 0,
+      "favorited": false
+    },
+    {
+      "tagList": [
+        "s8i3r4",
+        "tag_16",
+        "tag_mod_2_0",
+        "tag_mod_3_1"
+      ],
+      "createdAt": 1603327963995,
+      "author": {
+        "username": "authoress-ampas3",
+        "bio": "",
+        "image": "",
+        "following": false
+      },
+      "description": "description",
+      "title": "title",
+      "body": "body",
+      "slug": "title-vb32az",
+      "updatedAt": 1603327963995,
+      "favoritesCount": 0,
+      "favorited": false
+    },
+    {
+      "tagList": [
+        "15tkih",
+        "tag_15",
+        "tag_mod_2_1",
+        "tag_mod_3_0"
+      ],
+      "createdAt": 1603327963968,
+      "author": {
+        "username": "author-dh163w",
+        "bio": "",
+        "image": "",
+        "following": false
+      },
+      "description": "description",
+      "title": "title",
+      "body": "body",
+      "slug": "title-yc56tb",
+      "updatedAt": 1603327963968,
+      "favoritesCount": 0,
+      "favorited": false
+    },
+    {
+      "tagList": [
+        "9j01da",
+        "tag_14",
+        "tag_mod_2_0",
+        "tag_mod_3_2"
+      ],
+      "createdAt": 1603327963944,
+      "author": {
+        "username": "authoress-ampas3",
+        "bio": "",
+        "image": "",
+        "following": false
+      },
+      "description": "description",
+      "title": "title",
+      "body": "body",
+      "slug": "title-9wau76",
+      "updatedAt": 1603327963944,
+      "favoritesCount": 0,
+      "favorited": false
+    },
+    {
+      "tagList": [
+        "mz6frb",
+        "tag_13",
+        "tag_mod_2_1",
+        "tag_mod_3_1"
+      ],
+      "createdAt": 1603327963919,
+      "author": {
+        "username": "author-dh163w",
+        "bio": "",
+        "image": "",
+        "following": false
+      },
+      "description": "description",
+      "title": "title",
+      "body": "body",
+      "slug": "title-jyh906",
+      "updatedAt": 1603327963919,
+      "favoritesCount": 0,
+      "favorited": false
+    },
+    {
+      "tagList": [
+        "3ltll2",
+        "tag_12",
+        "tag_mod_2_0",
+        "tag_mod_3_0"
+      ],
+      "createdAt": 1603327963890,
+      "author": {
+        "username": "authoress-ampas3",
+        "bio": "",
+        "image": "",
+        "following": false
+      },
+      "description": "description",
+      "title": "title",
+      "body": "body",
+      "slug": "title-cvg84b",
+      "updatedAt": 1603327963890,
+      "favoritesCount": 0,
+      "favorited": false
+    },
+    {
+      "tagList": [
+        "j2fpyt",
+        "tag_11",
+        "tag_mod_2_1",
+        "tag_mod_3_2"
+      ],
+      "createdAt": 1603327963865,
+      "author": {
+        "username": "author-dh163w",
+        "bio": "",
+        "image": "",
+        "following": false
+      },
+      "description": "description",
+      "title": "title",
+      "body": "body",
+      "slug": "title-sg8jm9",
+      "updatedAt": 1603327963865,
+      "favoritesCount": 0,
+      "favorited": false
+    },
+    {
+      "tagList": [
+        "im1369",
+        "tag_10",
+        "tag_mod_2_0",
+        "tag_mod_3_1"
+      ],
+      "createdAt": 1603327963839,
+      "author": {
+        "username": "authoress-ampas3",
+        "bio": "",
+        "image": "",
+        "following": false
+      },
+      "description": "description",
+      "title": "title",
+      "body": "body",
+      "slug": "title-ftm7qj",
+      "updatedAt": 1603327963839,
+      "favoritesCount": 0,
+      "favorited": false
+    },
+    {
+      "tagList": [
+        "tag_9",
+        "tag_mod_2_1",
+        "tag_mod_3_0",
+        "wsq3cu"
+      ],
+      "createdAt": 1603327963803,
+      "author": {
+        "username": "author-dh163w",
+        "bio": "",
+        "image": "",
+        "following": false
+      },
+      "description": "description",
+      "title": "title",
+      "body": "body",
+      "slug": "title-lvrnin",
+      "updatedAt": 1603327963803,
+      "favoritesCount": 0,
+      "favorited": false
+    },
+    {
+      "tagList": [
+        "poru3j",
+        "tag_8",
+        "tag_mod_2_0",
+        "tag_mod_3_2"
+      ],
+      "createdAt": 1603327963770,
+      "author": {
+        "username": "authoress-ampas3",
+        "bio": "",
+        "image": "",
+        "following": false
+      },
+      "description": "description",
+      "title": "title",
+      "body": "body",
+      "slug": "title-hi6h76",
+      "updatedAt": 1603327963770,
+      "favoritesCount": 0,
+      "favorited": false
+    },
+    {
+      "tagList": [
+        "33ld2w",
+        "tag_7",
+        "tag_mod_2_1",
+        "tag_mod_3_1"
+      ],
+      "createdAt": 1603327963723,
+      "author": {
+        "username": "author-dh163w",
+        "bio": "",
+        "image": "",
+        "following": false
+      },
+      "description": "description",
+      "title": "title",
+      "body": "body",
+      "slug": "title-15uyd7",
+      "updatedAt": 1603327963723,
+      "favoritesCount": 0,
+      "favorited": false
+    },
+    {
+      "tagList": [
+        "11gc7a",
+        "tag_6",
+        "tag_mod_2_0",
+        "tag_mod_3_0"
+      ],
+      "createdAt": 1603327963667,
+      "author": {
+        "username": "authoress-ampas3",
+        "bio": "",
+        "image": "",
+        "following": false
+      },
+      "description": "description",
+      "title": "title",
+      "body": "body",
+      "slug": "title-2rmbqn",
+      "updatedAt": 1603327963667,
+      "favoritesCount": 0,
+      "favorited": false
+    },
+    {
+      "tagList": [
+        "tag_5",
+        "tag_mod_2_1",
+        "tag_mod_3_2",
+        "vfkq4l"
+      ],
+      "createdAt": 1603327963621,
+      "author": {
+        "username": "author-dh163w",
+        "bio": "",
+        "image": "",
+        "following": false
+      },
+      "description": "description",
+      "title": "title",
+      "body": "body",
+      "slug": "title-6uyd91",
+      "updatedAt": 1603327963621,
+      "favoritesCount": 0,
+      "favorited": false
+    },
+    {
+      "tagList": [
+        "mc0ron",
+        "tag_4",
+        "tag_mod_2_0",
+        "tag_mod_3_1"
+      ],
+      "createdAt": 1603327963575,
+      "author": {
+        "username": "authoress-ampas3",
+        "bio": "",
+        "image": "",
+        "following": false
+      },
+      "description": "description",
+      "title": "title",
+      "body": "body",
+      "slug": "title-m6fzur",
+      "updatedAt": 1603327963575,
+      "favoritesCount": 0,
+      "favorited": false
+    },
+    {
+      "tagList": [
+        "3vyebr",
+        "tag_3",
+        "tag_mod_2_1",
+        "tag_mod_3_0"
+      ],
+      "createdAt": 1603327963535,
+      "author": {
+        "username": "author-dh163w",
+        "bio": "",
+        "image": "",
+        "following": false
+      },
+      "description": "description",
+      "title": "title",
+      "body": "body",
+      "slug": "title-lub3nd",
+      "updatedAt": 1603327963535,
+      "favoritesCount": 0,
+      "favorited": false
+    },
+    {
+      "tagList": [
+        "lv8gen",
+        "tag_2",
+        "tag_mod_2_0",
+        "tag_mod_3_2"
+      ],
+      "createdAt": 1603327963509,
+      "author": {
+        "username": "authoress-ampas3",
+        "bio": "",
+        "image": "",
+        "following": false
+      },
+      "description": "description",
+      "title": "title",
+      "body": "body",
+      "slug": "title-t2wr94",
+      "updatedAt": 1603327963509,
+      "favoritesCount": 0,
+      "favorited": false
+    },
+    {
+      "tagList": [
+        "90y5rm",
+        "tag_1",
+        "tag_mod_2_1",
+        "tag_mod_3_1"
+      ],
+      "createdAt": 1603327963471,
+      "author": {
+        "username": "author-dh163w",
+        "bio": "",
+        "image": "",
+        "following": false
+      },
+      "description": "description",
+      "title": "title",
+      "body": "body",
+      "slug": "title-rx9ax6",
+      "updatedAt": 1603327963471,
+      "favoritesCount": 0,
+      "favorited": false
+    },
+    {
+      "tagList": [
+        "ow7zto",
+        "tag_0",
+        "tag_mod_2_0",
+        "tag_mod_3_0"
+      ],
+      "createdAt": 1603327963446,
+      "author": {
+        "username": "authoress-ampas3",
+        "bio": "",
+        "image": "",
+        "following": false
+      },
+      "description": "description",
+      "title": "title",
+      "body": "body",
+      "slug": "title-gz1cgd",
+      "updatedAt": 1603327963446,
+      "favoritesCount": 0,
+      "favorited": false
+    }
+  ]
+}
+</code></pre>
+<h3 id="shouldlistarticleswithtag">should list articles with tag</h3>
+<pre><code>GET /articles?tag=tag_7
+</code></pre>
+<pre><code>200 OK
+
+{
+  "articles": [
+    {
+      "tagList": [
+        "33ld2w",
+        "tag_7",
+        "tag_mod_2_1",
+        "tag_mod_3_1"
+      ],
+      "createdAt": 1603327963723,
+      "author": {
+        "username": "author-dh163w",
+        "bio": "",
+        "image": "",
+        "following": false
+      },
+      "description": "description",
+      "title": "title",
+      "body": "body",
+      "slug": "title-15uyd7",
+      "updatedAt": 1603327963723,
+      "favoritesCount": 0,
+      "favorited": false
+    }
+  ]
+}
+</code></pre>
+<pre><code>GET /articles?tag=tag_mod_3_2
+</code></pre>
+<pre><code>200 OK
+
+{
+  "articles": [
+    {
+      "tagList": [
+        "hu5y7x",
+        "tag_17",
+        "tag_mod_2_1",
+        "tag_mod_3_2"
+      ],
+      "createdAt": 1603327964023,
+      "author": {
+        "username": "author-dh163w",
+        "bio": "",
+        "image": "",
+        "following": false
+      },
+      "description": "description",
+      "title": "title",
+      "body": "body",
+      "slug": "title-v1j78m",
+      "updatedAt": 1603327964023,
+      "favoritesCount": 0,
+      "favorited": false
+    },
+    {
+      "tagList": [
+        "9j01da",
+        "tag_14",
+        "tag_mod_2_0",
+        "tag_mod_3_2"
+      ],
+      "createdAt": 1603327963944,
+      "author": {
+        "username": "authoress-ampas3",
+        "bio": "",
+        "image": "",
+        "following": false
+      },
+      "description": "description",
+      "title": "title",
+      "body": "body",
+      "slug": "title-9wau76",
+      "updatedAt": 1603327963944,
+      "favoritesCount": 0,
+      "favorited": false
+    },
+    {
+      "tagList": [
+        "j2fpyt",
+        "tag_11",
+        "tag_mod_2_1",
+        "tag_mod_3_2"
+      ],
+      "createdAt": 1603327963865,
+      "author": {
+        "username": "author-dh163w",
+        "bio": "",
+        "image": "",
+        "following": false
+      },
+      "description": "description",
+      "title": "title",
+      "body": "body",
+      "slug": "title-sg8jm9",
+      "updatedAt": 1603327963865,
+      "favoritesCount": 0,
+      "favorited": false
+    },
+    {
+      "tagList": [
+        "poru3j",
+        "tag_8",
+        "tag_mod_2_0",
+        "tag_mod_3_2"
+      ],
+      "createdAt": 1603327963770,
+      "author": {
+        "username": "authoress-ampas3",
+        "bio": "",
+        "image": "",
+        "following": false
+      },
+      "description": "description",
+      "title": "title",
+      "body": "body",
+      "slug": "title-hi6h76",
+      "updatedAt": 1603327963770,
+      "favoritesCount": 0,
+      "favorited": false
+    },
+    {
+      "tagList": [
+        "tag_5",
+        "tag_mod_2_1",
+        "tag_mod_3_2",
+        "vfkq4l"
+      ],
+      "createdAt": 1603327963621,
+      "author": {
+        "username": "author-dh163w",
+        "bio": "",
+        "image": "",
+        "following": false
+      },
+      "description": "description",
+      "title": "title",
+      "body": "body",
+      "slug": "title-6uyd91",
+      "updatedAt": 1603327963621,
+      "favoritesCount": 0,
+      "favorited": false
+    },
+    {
+      "tagList": [
+        "lv8gen",
+        "tag_2",
+        "tag_mod_2_0",
+        "tag_mod_3_2"
+      ],
+      "createdAt": 1603327963509,
+      "author": {
+        "username": "authoress-ampas3",
+        "bio": "",
+        "image": "",
+        "following": false
+      },
+      "description": "description",
+      "title": "title",
+      "body": "body",
+      "slug": "title-t2wr94",
+      "updatedAt": 1603327963509,
+      "favoritesCount": 0,
+      "favorited": false
+    }
+  ]
+}
+</code></pre>
+<h3 id="shouldlistarticlesbyauthor">should list articles by author</h3>
+<pre><code>GET /articles?author=authoress-ampas3
+</code></pre>
+<pre><code>200 OK
+
+{
+  "articles": [
+    {
+      "tagList": [
+        "7p4ozm",
+        "tag_18",
+        "tag_mod_2_0",
+        "tag_mod_3_0"
+      ],
+      "createdAt": 1603327964048,
+      "author": {
+        "username": "authoress-ampas3",
+        "bio": "",
+        "image": "",
+        "following": false
+      },
+      "description": "description",
+      "title": "title",
+      "body": "body",
+      "slug": "title-voianx",
+      "updatedAt": 1603327964048,
+      "favoritesCount": 0,
+      "favorited": false
+    },
+    {
+      "tagList": [
+        "s8i3r4",
+        "tag_16",
+        "tag_mod_2_0",
+        "tag_mod_3_1"
+      ],
+      "createdAt": 1603327963995,
+      "author": {
+        "username": "authoress-ampas3",
+        "bio": "",
+        "image": "",
+        "following": false
+      },
+      "description": "description",
+      "title": "title",
+      "body": "body",
+      "slug": "title-vb32az",
+      "updatedAt": 1603327963995,
+      "favoritesCount": 0,
+      "favorited": false
+    },
+    {
+      "tagList": [
+        "9j01da",
+        "tag_14",
+        "tag_mod_2_0",
+        "tag_mod_3_2"
+      ],
+      "createdAt": 1603327963944,
+      "author": {
+        "username": "authoress-ampas3",
+        "bio": "",
+        "image": "",
+        "following": false
+      },
+      "description": "description",
+      "title": "title",
+      "body": "body",
+      "slug": "title-9wau76",
+      "updatedAt": 1603327963944,
+      "favoritesCount": 0,
+      "favorited": false
+    },
+    {
+      "tagList": [
+        "3ltll2",
+        "tag_12",
+        "tag_mod_2_0",
+        "tag_mod_3_0"
+      ],
+      "createdAt": 1603327963890,
+      "author": {
+        "username": "authoress-ampas3",
+        "bio": "",
+        "image": "",
+        "following": false
+      },
+      "description": "description",
+      "title": "title",
+      "body": "body",
+      "slug": "title-cvg84b",
+      "updatedAt": 1603327963890,
+      "favoritesCount": 0,
+      "favorited": false
+    },
+    {
+      "tagList": [
+        "im1369",
+        "tag_10",
+        "tag_mod_2_0",
+        "tag_mod_3_1"
+      ],
+      "createdAt": 1603327963839,
+      "author": {
+        "username": "authoress-ampas3",
+        "bio": "",
+        "image": "",
+        "following": false
+      },
+      "description": "description",
+      "title": "title",
+      "body": "body",
+      "slug": "title-ftm7qj",
+      "updatedAt": 1603327963839,
+      "favoritesCount": 0,
+      "favorited": false
+    },
+    {
+      "tagList": [
+        "poru3j",
+        "tag_8",
+        "tag_mod_2_0",
+        "tag_mod_3_2"
+      ],
+      "createdAt": 1603327963770,
+      "author": {
+        "username": "authoress-ampas3",
+        "bio": "",
+        "image": "",
+        "following": false
+      },
+      "description": "description",
+      "title": "title",
+      "body": "body",
+      "slug": "title-hi6h76",
+      "updatedAt": 1603327963770,
+      "favoritesCount": 0,
+      "favorited": false
+    },
+    {
+      "tagList": [
+        "11gc7a",
+        "tag_6",
+        "tag_mod_2_0",
+        "tag_mod_3_0"
+      ],
+      "createdAt": 1603327963667,
+      "author": {
+        "username": "authoress-ampas3",
+        "bio": "",
+        "image": "",
+        "following": false
+      },
+      "description": "description",
+      "title": "title",
+      "body": "body",
+      "slug": "title-2rmbqn",
+      "updatedAt": 1603327963667,
+      "favoritesCount": 0,
+      "favorited": false
+    },
+    {
+      "tagList": [
+        "mc0ron",
+        "tag_4",
+        "tag_mod_2_0",
+        "tag_mod_3_1"
+      ],
+      "createdAt": 1603327963575,
+      "author": {
+        "username": "authoress-ampas3",
+        "bio": "",
+        "image": "",
+        "following": false
+      },
+      "description": "description",
+      "title": "title",
+      "body": "body",
+      "slug": "title-m6fzur",
+      "updatedAt": 1603327963575,
+      "favoritesCount": 0,
+      "favorited": false
+    },
+    {
+      "tagList": [
+        "lv8gen",
+        "tag_2",
+        "tag_mod_2_0",
+        "tag_mod_3_2"
+      ],
+      "createdAt": 1603327963509,
+      "author": {
+        "username": "authoress-ampas3",
+        "bio": "",
+        "image": "",
+        "following": false
+      },
+      "description": "description",
+      "title": "title",
+      "body": "body",
+      "slug": "title-t2wr94",
+      "updatedAt": 1603327963509,
+      "favoritesCount": 0,
+      "favorited": false
+    },
+    {
+      "tagList": [
+        "ow7zto",
+        "tag_0",
+        "tag_mod_2_0",
+        "tag_mod_3_0"
+      ],
+      "createdAt": 1603327963446,
+      "author": {
+        "username": "authoress-ampas3",
+        "bio": "",
+        "image": "",
+        "following": false
+      },
+      "description": "description",
+      "title": "title",
+      "body": "body",
+      "slug": "title-gz1cgd",
+      "updatedAt": 1603327963446,
+      "favoritesCount": 0,
+      "favorited": false
+    }
+  ]
+}
+</code></pre>
+<h3 id="shouldlistarticlesfavoritedbyuser">should list articles favorited by user</h3>
+<pre><code>GET /articles?favorited=non-author-bn1we9
+</code></pre>
+<pre><code>200 OK
+
+{
+  "articles": []
+}
+</code></pre>
+<h3 id="shouldlistarticlesbylimitoffset">should list articles by limit/offset</h3>
+<pre><code>GET /articles?author=author-dh163w&amp;limit=2
+</code></pre>
+<pre><code>200 OK
+
+{
+  "articles": [
+    {
+      "tagList": [
+        "lehgsw",
+        "tag_19",
+        "tag_mod_2_1",
+        "tag_mod_3_1"
+      ],
+      "createdAt": 1603327964083,
+      "author": {
+        "username": "author-dh163w",
+        "bio": "",
+        "image": "",
+        "following": false
+      },
+      "description": "description",
+      "title": "title",
+      "body": "body",
+      "slug": "title-f1vhfw",
+      "updatedAt": 1603327964083,
+      "favoritesCount": 0,
+      "favorited": false
+    },
+    {
+      "tagList": [
+        "hu5y7x",
+        "tag_17",
+        "tag_mod_2_1",
+        "tag_mod_3_2"
+      ],
+      "createdAt": 1603327964023,
+      "author": {
+        "username": "author-dh163w",
+        "bio": "",
+        "image": "",
+        "following": false
+      },
+      "description": "description",
+      "title": "title",
+      "body": "body",
+      "slug": "title-v1j78m",
+      "updatedAt": 1603327964023,
+      "favoritesCount": 0,
+      "favorited": false
+    }
+  ]
+}
+</code></pre>
+<pre><code>GET /articles?author=author-dh163w&amp;limit=2&amp;offset=2
+</code></pre>
+<pre><code>200 OK
+
+{
+  "articles": [
+    {
+      "tagList": [
+        "15tkih",
+        "tag_15",
+        "tag_mod_2_1",
+        "tag_mod_3_0"
+      ],
+      "createdAt": 1603327963968,
+      "author": {
+        "username": "author-dh163w",
+        "bio": "",
+        "image": "",
+        "following": false
+      },
+      "description": "description",
+      "title": "title",
+      "body": "body",
+      "slug": "title-yc56tb",
+      "updatedAt": 1603327963968,
+      "favoritesCount": 0,
+      "favorited": false
+    },
+    {
+      "tagList": [
+        "mz6frb",
+        "tag_13",
+        "tag_mod_2_1",
+        "tag_mod_3_1"
+      ],
+      "createdAt": 1603327963919,
+      "author": {
+        "username": "author-dh163w",
+        "bio": "",
+        "image": "",
+        "following": false
+      },
+      "description": "description",
+      "title": "title",
+      "body": "body",
+      "slug": "title-jyh906",
+      "updatedAt": 1603327963919,
+      "favoritesCount": 0,
+      "favorited": false
+    }
+  ]
+}
+</code></pre>
+<h3 id="shouldlistarticleswhenauthenticated">should list articles when authenticated</h3>
+<pre><code>GET /articles
+</code></pre>
+<pre><code>200 OK
+
+{
+  "articles": [
+    {
+      "tagList": [
+        "lehgsw",
+        "tag_19",
+        "tag_mod_2_1",
+        "tag_mod_3_1"
+      ],
+      "createdAt": 1603327964083,
+      "author": {
+        "username": "author-dh163w",
+        "bio": "",
+        "image": "",
+        "following": false
+      },
+      "description": "description",
+      "title": "title",
+      "body": "body",
+      "slug": "title-f1vhfw",
+      "updatedAt": 1603327964083,
+      "favoritesCount": 0,
+      "favorited": false
+    },
+    {
+      "tagList": [
+        "7p4ozm",
+        "tag_18",
+        "tag_mod_2_0",
+        "tag_mod_3_0"
+      ],
+      "createdAt": 1603327964048,
+      "author": {
+        "username": "authoress-ampas3",
+        "bio": "",
+        "image": "",
+        "following": false
+      },
+      "description": "description",
+      "title": "title",
+      "body": "body",
+      "slug": "title-voianx",
+      "updatedAt": 1603327964048,
+      "favoritesCount": 0,
+      "favorited": false
+    },
+    {
+      "tagList": [
+        "hu5y7x",
+        "tag_17",
+        "tag_mod_2_1",
+        "tag_mod_3_2"
+      ],
+      "createdAt": 1603327964023,
+      "author": {
+        "username": "author-dh163w",
+        "bio": "",
+        "image": "",
+        "following": false
+      },
+      "description": "description",
+      "title": "title",
+      "body": "body",
+      "slug": "title-v1j78m",
+      "updatedAt": 1603327964023,
+      "favoritesCount": 0,
+      "favorited": false
+    },
+    {
+      "tagList": [
+        "s8i3r4",
+        "tag_16",
+        "tag_mod_2_0",
+        "tag_mod_3_1"
+      ],
+      "createdAt": 1603327963995,
+      "author": {
+        "username": "authoress-ampas3",
+        "bio": "",
+        "image": "",
+        "following": false
+      },
+      "description": "description",
+      "title": "title",
+      "body": "body",
+      "slug": "title-vb32az",
+      "updatedAt": 1603327963995,
+      "favoritesCount": 0,
+      "favorited": false
+    },
+    {
+      "tagList": [
+        "15tkih",
+        "tag_15",
+        "tag_mod_2_1",
+        "tag_mod_3_0"
+      ],
+      "createdAt": 1603327963968,
+      "author": {
+        "username": "author-dh163w",
+        "bio": "",
+        "image": "",
+        "following": false
+      },
+      "description": "description",
+      "title": "title",
+      "body": "body",
+      "slug": "title-yc56tb",
+      "updatedAt": 1603327963968,
+      "favoritesCount": 0,
+      "favorited": false
+    },
+    {
+      "tagList": [
+        "9j01da",
+        "tag_14",
+        "tag_mod_2_0",
+        "tag_mod_3_2"
+      ],
+      "createdAt": 1603327963944,
+      "author": {
+        "username": "authoress-ampas3",
+        "bio": "",
+        "image": "",
+        "following": false
+      },
+      "description": "description",
+      "title": "title",
+      "body": "body",
+      "slug": "title-9wau76",
+      "updatedAt": 1603327963944,
+      "favoritesCount": 0,
+      "favorited": false
+    },
+    {
+      "tagList": [
+        "mz6frb",
+        "tag_13",
+        "tag_mod_2_1",
+        "tag_mod_3_1"
+      ],
+      "createdAt": 1603327963919,
+      "author": {
+        "username": "author-dh163w",
+        "bio": "",
+        "image": "",
+        "following": false
+      },
+      "description": "description",
+      "title": "title",
+      "body": "body",
+      "slug": "title-jyh906",
+      "updatedAt": 1603327963919,
+      "favoritesCount": 0,
+      "favorited": false
+    },
+    {
+      "tagList": [
+        "3ltll2",
+        "tag_12",
+        "tag_mod_2_0",
+        "tag_mod_3_0"
+      ],
+      "createdAt": 1603327963890,
+      "author": {
+        "username": "authoress-ampas3",
+        "bio": "",
+        "image": "",
+        "following": false
+      },
+      "description": "description",
+      "title": "title",
+      "body": "body",
+      "slug": "title-cvg84b",
+      "updatedAt": 1603327963890,
+      "favoritesCount": 0,
+      "favorited": false
+    },
+    {
+      "tagList": [
+        "j2fpyt",
+        "tag_11",
+        "tag_mod_2_1",
+        "tag_mod_3_2"
+      ],
+      "createdAt": 1603327963865,
+      "author": {
+        "username": "author-dh163w",
+        "bio": "",
+        "image": "",
+        "following": false
+      },
+      "description": "description",
+      "title": "title",
+      "body": "body",
+      "slug": "title-sg8jm9",
+      "updatedAt": 1603327963865,
+      "favoritesCount": 0,
+      "favorited": false
+    },
+    {
+      "tagList": [
+        "im1369",
+        "tag_10",
+        "tag_mod_2_0",
+        "tag_mod_3_1"
+      ],
+      "createdAt": 1603327963839,
+      "author": {
+        "username": "authoress-ampas3",
+        "bio": "",
+        "image": "",
+        "following": false
+      },
+      "description": "description",
+      "title": "title",
+      "body": "body",
+      "slug": "title-ftm7qj",
+      "updatedAt": 1603327963839,
+      "favoritesCount": 0,
+      "favorited": false
+    },
+    {
+      "tagList": [
+        "tag_9",
+        "tag_mod_2_1",
+        "tag_mod_3_0",
+        "wsq3cu"
+      ],
+      "createdAt": 1603327963803,
+      "author": {
+        "username": "author-dh163w",
+        "bio": "",
+        "image": "",
+        "following": false
+      },
+      "description": "description",
+      "title": "title",
+      "body": "body",
+      "slug": "title-lvrnin",
+      "updatedAt": 1603327963803,
+      "favoritesCount": 0,
+      "favorited": false
+    },
+    {
+      "tagList": [
+        "poru3j",
+        "tag_8",
+        "tag_mod_2_0",
+        "tag_mod_3_2"
+      ],
+      "createdAt": 1603327963770,
+      "author": {
+        "username": "authoress-ampas3",
+        "bio": "",
+        "image": "",
+        "following": false
+      },
+      "description": "description",
+      "title": "title",
+      "body": "body",
+      "slug": "title-hi6h76",
+      "updatedAt": 1603327963770,
+      "favoritesCount": 0,
+      "favorited": false
+    },
+    {
+      "tagList": [
+        "33ld2w",
+        "tag_7",
+        "tag_mod_2_1",
+        "tag_mod_3_1"
+      ],
+      "createdAt": 1603327963723,
+      "author": {
+        "username": "author-dh163w",
+        "bio": "",
+        "image": "",
+        "following": false
+      },
+      "description": "description",
+      "title": "title",
+      "body": "body",
+      "slug": "title-15uyd7",
+      "updatedAt": 1603327963723,
+      "favoritesCount": 0,
+      "favorited": false
+    },
+    {
+      "tagList": [
+        "11gc7a",
+        "tag_6",
+        "tag_mod_2_0",
+        "tag_mod_3_0"
+      ],
+      "createdAt": 1603327963667,
+      "author": {
+        "username": "authoress-ampas3",
+        "bio": "",
+        "image": "",
+        "following": false
+      },
+      "description": "description",
+      "title": "title",
+      "body": "body",
+      "slug": "title-2rmbqn",
+      "updatedAt": 1603327963667,
+      "favoritesCount": 0,
+      "favorited": false
+    },
+    {
+      "tagList": [
+        "tag_5",
+        "tag_mod_2_1",
+        "tag_mod_3_2",
+        "vfkq4l"
+      ],
+      "createdAt": 1603327963621,
+      "author": {
+        "username": "author-dh163w",
+        "bio": "",
+        "image": "",
+        "following": false
+      },
+      "description": "description",
+      "title": "title",
+      "body": "body",
+      "slug": "title-6uyd91",
+      "updatedAt": 1603327963621,
+      "favoritesCount": 0,
+      "favorited": false
+    },
+    {
+      "tagList": [
+        "mc0ron",
+        "tag_4",
+        "tag_mod_2_0",
+        "tag_mod_3_1"
+      ],
+      "createdAt": 1603327963575,
+      "author": {
+        "username": "authoress-ampas3",
+        "bio": "",
+        "image": "",
+        "following": false
+      },
+      "description": "description",
+      "title": "title",
+      "body": "body",
+      "slug": "title-m6fzur",
+      "updatedAt": 1603327963575,
+      "favoritesCount": 0,
+      "favorited": false
+    },
+    {
+      "tagList": [
+        "3vyebr",
+        "tag_3",
+        "tag_mod_2_1",
+        "tag_mod_3_0"
+      ],
+      "createdAt": 1603327963535,
+      "author": {
+        "username": "author-dh163w",
+        "bio": "",
+        "image": "",
+        "following": false
+      },
+      "description": "description",
+      "title": "title",
+      "body": "body",
+      "slug": "title-lub3nd",
+      "updatedAt": 1603327963535,
+      "favoritesCount": 0,
+      "favorited": false
+    },
+    {
+      "tagList": [
+        "lv8gen",
+        "tag_2",
+        "tag_mod_2_0",
+        "tag_mod_3_2"
+      ],
+      "createdAt": 1603327963509,
+      "author": {
+        "username": "authoress-ampas3",
+        "bio": "",
+        "image": "",
+        "following": false
+      },
+      "description": "description",
+      "title": "title",
+      "body": "body",
+      "slug": "title-t2wr94",
+      "updatedAt": 1603327963509,
+      "favoritesCount": 0,
+      "favorited": false
+    },
+    {
+      "tagList": [
+        "90y5rm",
+        "tag_1",
+        "tag_mod_2_1",
+        "tag_mod_3_1"
+      ],
+      "createdAt": 1603327963471,
+      "author": {
+        "username": "author-dh163w",
+        "bio": "",
+        "image": "",
+        "following": false
+      },
+      "description": "description",
+      "title": "title",
+      "body": "body",
+      "slug": "title-rx9ax6",
+      "updatedAt": 1603327963471,
+      "favoritesCount": 0,
+      "favorited": false
+    },
+    {
+      "tagList": [
+        "ow7zto",
+        "tag_0",
+        "tag_mod_2_0",
+        "tag_mod_3_0"
+      ],
+      "createdAt": 1603327963446,
+      "author": {
+        "username": "authoress-ampas3",
+        "bio": "",
+        "image": "",
+        "following": false
+      },
+      "description": "description",
+      "title": "title",
+      "body": "body",
+      "slug": "title-gz1cgd",
+      "updatedAt": 1603327963446,
+      "favoritesCount": 0,
+      "favorited": false
+    }
+  ]
+}
+</code></pre>
+<h3 id="shoulddisallowmultipleofauthortagfavorited">should disallow multiple of author/tag/favorited</h3>
+<pre><code>GET /articles?tag=foo&amp;author=bar
+</code></pre>
+<pre><code>GET /articles?author=foo&amp;favorited=bar
+</code></pre>
+<pre><code>GET /articles?favorited=foo&amp;tag=bar
+</code></pre>
+<h2 id="feed">Feed</h2>
+<h3 id="shouldgetfeed">should get feed</h3>
+<pre><code>GET /articles/feed
+</code></pre>
+<pre><code>422 Unprocessable Entity
+
+{
+  "errors": {
+    "body": [
+      "Only one of these can be specified: [tag, author, favorited]"
+    ]
+  }
+}
+</code></pre>
+<pre><code>422 Unprocessable Entity
+
+{
+  "errors": {
+    "body": [
+      "Only one of these can be specified: [tag, author, favorited]"
+    ]
+  }
+}
+</code></pre>
+<pre><code>422 Unprocessable Entity
+
+{
+  "errors": {
+    "body": [
+      "Only one of these can be specified: [tag, author, favorited]"
+    ]
+  }
+}
+</code></pre>
+<pre><code>200 OK
+
+{
+  "articles": []
+}
+</code></pre>
+<pre><code>POST /profiles/authoress-ampas3/follow
+
+{}
+</code></pre>
+<pre><code>200 OK
+
+{
+  "profile": {
+    "username": "authoress-ampas3",
+    "bio": "",
+    "image": "",
+    "following": true
+  }
+}
+</code></pre>
+<pre><code>GET /articles/feed
+</code></pre>
+<pre><code>200 OK
+
+{
+  "articles": [
+    {
+      "tagList": [
+        "7p4ozm",
+        "tag_18",
+        "tag_mod_2_0",
+        "tag_mod_3_0"
+      ],
+      "createdAt": 1603327964048,
+      "author": {
+        "username": "authoress-ampas3",
+        "bio": "",
+        "image": "",
+        "following": true
+      },
+      "description": "description",
+      "title": "title",
+      "body": "body",
+      "slug": "title-voianx",
+      "updatedAt": 1603327964048,
+      "favoritesCount": 0,
+      "favorited": false
+    },
+    {
+      "tagList": [
+        "s8i3r4",
+        "tag_16",
+        "tag_mod_2_0",
+        "tag_mod_3_1"
+      ],
+      "createdAt": 1603327963995,
+      "author": {
+        "username": "authoress-ampas3",
+        "bio": "",
+        "image": "",
+        "following": true
+      },
+      "description": "description",
+      "title": "title",
+      "body": "body",
+      "slug": "title-vb32az",
+      "updatedAt": 1603327963995,
+      "favoritesCount": 0,
+      "favorited": false
+    },
+    {
+      "tagList": [
+        "9j01da",
+        "tag_14",
+        "tag_mod_2_0",
+        "tag_mod_3_2"
+      ],
+      "createdAt": 1603327963944,
+      "author": {
+        "username": "authoress-ampas3",
+        "bio": "",
+        "image": "",
+        "following": true
+      },
+      "description": "description",
+      "title": "title",
+      "body": "body",
+      "slug": "title-9wau76",
+      "updatedAt": 1603327963944,
+      "favoritesCount": 0,
+      "favorited": false
+    },
+    {
+      "tagList": [
+        "3ltll2",
+        "tag_12",
+        "tag_mod_2_0",
+        "tag_mod_3_0"
+      ],
+      "createdAt": 1603327963890,
+      "author": {
+        "username": "authoress-ampas3",
+        "bio": "",
+        "image": "",
+        "following": true
+      },
+      "description": "description",
+      "title": "title",
+      "body": "body",
+      "slug": "title-cvg84b",
+      "updatedAt": 1603327963890,
+      "favoritesCount": 0,
+      "favorited": false
+    },
+    {
+      "tagList": [
+        "im1369",
+        "tag_10",
+        "tag_mod_2_0",
+        "tag_mod_3_1"
+      ],
+      "createdAt": 1603327963839,
+      "author": {
+        "username": "authoress-ampas3",
+        "bio": "",
+        "image": "",
+        "following": true
+      },
+      "description": "description",
+      "title": "title",
+      "body": "body",
+      "slug": "title-ftm7qj",
+      "updatedAt": 1603327963839,
+      "favoritesCount": 0,
+      "favorited": false
+    },
+    {
+      "tagList": [
+        "poru3j",
+        "tag_8",
+        "tag_mod_2_0",
+        "tag_mod_3_2"
+      ],
+      "createdAt": 1603327963770,
+      "author": {
+        "username": "authoress-ampas3",
+        "bio": "",
+        "image": "",
+        "following": true
+      },
+      "description": "description",
+      "title": "title",
+      "body": "body",
+      "slug": "title-hi6h76",
+      "updatedAt": 1603327963770,
+      "favoritesCount": 0,
+      "favorited": false
+    },
+    {
+      "tagList": [
+        "11gc7a",
+        "tag_6",
+        "tag_mod_2_0",
+        "tag_mod_3_0"
+      ],
+      "createdAt": 1603327963667,
+      "author": {
+        "username": "authoress-ampas3",
+        "bio": "",
+        "image": "",
+        "following": true
+      },
+      "description": "description",
+      "title": "title",
+      "body": "body",
+      "slug": "title-2rmbqn",
+      "updatedAt": 1603327963667,
+      "favoritesCount": 0,
+      "favorited": false
+    },
+    {
+      "tagList": [
+        "mc0ron",
+        "tag_4",
+        "tag_mod_2_0",
+        "tag_mod_3_1"
+      ],
+      "createdAt": 1603327963575,
+      "author": {
+        "username": "authoress-ampas3",
+        "bio": "",
+        "image": "",
+        "following": true
+      },
+      "description": "description",
+      "title": "title",
+      "body": "body",
+      "slug": "title-m6fzur",
+      "updatedAt": 1603327963575,
+      "favoritesCount": 0,
+      "favorited": false
+    },
+    {
+      "tagList": [
+        "lv8gen",
+        "tag_2",
+        "tag_mod_2_0",
+        "tag_mod_3_2"
+      ],
+      "createdAt": 1603327963509,
+      "author": {
+        "username": "authoress-ampas3",
+        "bio": "",
+        "image": "",
+        "following": true
+      },
+      "description": "description",
+      "title": "title",
+      "body": "body",
+      "slug": "title-t2wr94",
+      "updatedAt": 1603327963509,
+      "favoritesCount": 0,
+      "favorited": false
+    },
+    {
+      "tagList": [
+        "ow7zto",
+        "tag_0",
+        "tag_mod_2_0",
+        "tag_mod_3_0"
+      ],
+      "createdAt": 1603327963446,
+      "author": {
+        "username": "authoress-ampas3",
+        "bio": "",
+        "image": "",
+        "following": true
+      },
+      "description": "description",
+      "title": "title",
+      "body": "body",
+      "slug": "title-gz1cgd",
+      "updatedAt": 1603327963446,
+      "favoritesCount": 0,
+      "favorited": false
+    }
+  ]
+}
+</code></pre>
+<pre><code>POST /profiles/author-dh163w/follow
+
+{}
+</code></pre>
+<pre><code>200 OK
+
+{
+  "profile": {
+    "username": "author-dh163w",
+    "bio": "",
+    "image": "",
+    "following": true
+  }
+}
+</code></pre>
+<pre><code>GET /articles/feed
+</code></pre>
+<pre><code>200 OK
+
+{
+  "articles": [
+    {
+      "tagList": [
+        "lehgsw",
+        "tag_19",
+        "tag_mod_2_1",
+        "tag_mod_3_1"
+      ],
+      "createdAt": 1603327964083,
+      "author": {
+        "username": "author-dh163w",
+        "bio": "",
+        "image": "",
+        "following": true
+      },
+      "description": "description",
+      "title": "title",
+      "body": "body",
+      "slug": "title-f1vhfw",
+      "updatedAt": 1603327964083,
+      "favoritesCount": 0,
+      "favorited": false
+    },
+    {
+      "tagList": [
+        "7p4ozm",
+        "tag_18",
+        "tag_mod_2_0",
+        "tag_mod_3_0"
+      ],
+      "createdAt": 1603327964048,
+      "author": {
+        "username": "authoress-ampas3",
+        "bio": "",
+        "image": "",
+        "following": true
+      },
+      "description": "description",
+      "title": "title",
+      "body": "body",
+      "slug": "title-voianx",
+      "updatedAt": 1603327964048,
+      "favoritesCount": 0,
+      "favorited": false
+    },
+    {
+      "tagList": [
+        "hu5y7x",
+        "tag_17",
+        "tag_mod_2_1",
+        "tag_mod_3_2"
+      ],
+      "createdAt": 1603327964023,
+      "author": {
+        "username": "author-dh163w",
+        "bio": "",
+        "image": "",
+        "following": true
+      },
+      "description": "description",
+      "title": "title",
+      "body": "body",
+      "slug": "title-v1j78m",
+      "updatedAt": 1603327964023,
+      "favoritesCount": 0,
+      "favorited": false
+    },
+    {
+      "tagList": [
+        "s8i3r4",
+        "tag_16",
+        "tag_mod_2_0",
+        "tag_mod_3_1"
+      ],
+      "createdAt": 1603327963995,
+      "author": {
+        "username": "authoress-ampas3",
+        "bio": "",
+        "image": "",
+        "following": true
+      },
+      "description": "description",
+      "title": "title",
+      "body": "body",
+      "slug": "title-vb32az",
+      "updatedAt": 1603327963995,
+      "favoritesCount": 0,
+      "favorited": false
+    },
+    {
+      "tagList": [
+        "15tkih",
+        "tag_15",
+        "tag_mod_2_1",
+        "tag_mod_3_0"
+      ],
+      "createdAt": 1603327963968,
+      "author": {
+        "username": "author-dh163w",
+        "bio": "",
+        "image": "",
+        "following": true
+      },
+      "description": "description",
+      "title": "title",
+      "body": "body",
+      "slug": "title-yc56tb",
+      "updatedAt": 1603327963968,
+      "favoritesCount": 0,
+      "favorited": false
+    },
+    {
+      "tagList": [
+        "9j01da",
+        "tag_14",
+        "tag_mod_2_0",
+        "tag_mod_3_2"
+      ],
+      "createdAt": 1603327963944,
+      "author": {
+        "username": "authoress-ampas3",
+        "bio": "",
+        "image": "",
+        "following": true
+      },
+      "description": "description",
+      "title": "title",
+      "body": "body",
+      "slug": "title-9wau76",
+      "updatedAt": 1603327963944,
+      "favoritesCount": 0,
+      "favorited": false
+    },
+    {
+      "tagList": [
+        "mz6frb",
+        "tag_13",
+        "tag_mod_2_1",
+        "tag_mod_3_1"
+      ],
+      "createdAt": 1603327963919,
+      "author": {
+        "username": "author-dh163w",
+        "bio": "",
+        "image": "",
+        "following": true
+      },
+      "description": "description",
+      "title": "title",
+      "body": "body",
+      "slug": "title-jyh906",
+      "updatedAt": 1603327963919,
+      "favoritesCount": 0,
+      "favorited": false
+    },
+    {
+      "tagList": [
+        "3ltll2",
+        "tag_12",
+        "tag_mod_2_0",
+        "tag_mod_3_0"
+      ],
+      "createdAt": 1603327963890,
+      "author": {
+        "username": "authoress-ampas3",
+        "bio": "",
+        "image": "",
+        "following": true
+      },
+      "description": "description",
+      "title": "title",
+      "body": "body",
+      "slug": "title-cvg84b",
+      "updatedAt": 1603327963890,
+      "favoritesCount": 0,
+      "favorited": false
+    },
+    {
+      "tagList": [
+        "j2fpyt",
+        "tag_11",
+        "tag_mod_2_1",
+        "tag_mod_3_2"
+      ],
+      "createdAt": 1603327963865,
+      "author": {
+        "username": "author-dh163w",
+        "bio": "",
+        "image": "",
+        "following": true
+      },
+      "description": "description",
+      "title": "title",
+      "body": "body",
+      "slug": "title-sg8jm9",
+      "updatedAt": 1603327963865,
+      "favoritesCount": 0,
+      "favorited": false
+    },
+    {
+      "tagList": [
+        "im1369",
+        "tag_10",
+        "tag_mod_2_0",
+        "tag_mod_3_1"
+      ],
+      "createdAt": 1603327963839,
+      "author": {
+        "username": "authoress-ampas3",
+        "bio": "",
+        "image": "",
+        "following": true
+      },
+      "description": "description",
+      "title": "title",
+      "body": "body",
+      "slug": "title-ftm7qj",
+      "updatedAt": 1603327963839,
+      "favoritesCount": 0,
+      "favorited": false
+    },
+    {
+      "tagList": [
+        "tag_9",
+        "tag_mod_2_1",
+        "tag_mod_3_0",
+        "wsq3cu"
+      ],
+      "createdAt": 1603327963803,
+      "author": {
+        "username": "author-dh163w",
+        "bio": "",
+        "image": "",
+        "following": true
+      },
+      "description": "description",
+      "title": "title",
+      "body": "body",
+      "slug": "title-lvrnin",
+      "updatedAt": 1603327963803,
+      "favoritesCount": 0,
+      "favorited": false
+    },
+    {
+      "tagList": [
+        "poru3j",
+        "tag_8",
+        "tag_mod_2_0",
+        "tag_mod_3_2"
+      ],
+      "createdAt": 1603327963770,
+      "author": {
+        "username": "authoress-ampas3",
+        "bio": "",
+        "image": "",
+        "following": true
+      },
+      "description": "description",
+      "title": "title",
+      "body": "body",
+      "slug": "title-hi6h76",
+      "updatedAt": 1603327963770,
+      "favoritesCount": 0,
+      "favorited": false
+    },
+    {
+      "tagList": [
+        "33ld2w",
+        "tag_7",
+        "tag_mod_2_1",
+        "tag_mod_3_1"
+      ],
+      "createdAt": 1603327963723,
+      "author": {
+        "username": "author-dh163w",
+        "bio": "",
+        "image": "",
+        "following": true
+      },
+      "description": "description",
+      "title": "title",
+      "body": "body",
+      "slug": "title-15uyd7",
+      "updatedAt": 1603327963723,
+      "favoritesCount": 0,
+      "favorited": false
+    },
+    {
+      "tagList": [
+        "11gc7a",
+        "tag_6",
+        "tag_mod_2_0",
+        "tag_mod_3_0"
+      ],
+      "createdAt": 1603327963667,
+      "author": {
+        "username": "authoress-ampas3",
+        "bio": "",
+        "image": "",
+        "following": true
+      },
+      "description": "description",
+      "title": "title",
+      "body": "body",
+      "slug": "title-2rmbqn",
+      "updatedAt": 1603327963667,
+      "favoritesCount": 0,
+      "favorited": false
+    },
+    {
+      "tagList": [
+        "tag_5",
+        "tag_mod_2_1",
+        "tag_mod_3_2",
+        "vfkq4l"
+      ],
+      "createdAt": 1603327963621,
+      "author": {
+        "username": "author-dh163w",
+        "bio": "",
+        "image": "",
+        "following": true
+      },
+      "description": "description",
+      "title": "title",
+      "body": "body",
+      "slug": "title-6uyd91",
+      "updatedAt": 1603327963621,
+      "favoritesCount": 0,
+      "favorited": false
+    },
+    {
+      "tagList": [
+        "mc0ron",
+        "tag_4",
+        "tag_mod_2_0",
+        "tag_mod_3_1"
+      ],
+      "createdAt": 1603327963575,
+      "author": {
+        "username": "authoress-ampas3",
+        "bio": "",
+        "image": "",
+        "following": true
+      },
+      "description": "description",
+      "title": "title",
+      "body": "body",
+      "slug": "title-m6fzur",
+      "updatedAt": 1603327963575,
+      "favoritesCount": 0,
+      "favorited": false
+    },
+    {
+      "tagList": [
+        "3vyebr",
+        "tag_3",
+        "tag_mod_2_1",
+        "tag_mod_3_0"
+      ],
+      "createdAt": 1603327963535,
+      "author": {
+        "username": "author-dh163w",
+        "bio": "",
+        "image": "",
+        "following": true
+      },
+      "description": "description",
+      "title": "title",
+      "body": "body",
+      "slug": "title-lub3nd",
+      "updatedAt": 1603327963535,
+      "favoritesCount": 0,
+      "favorited": false
+    },
+    {
+      "tagList": [
+        "lv8gen",
+        "tag_2",
+        "tag_mod_2_0",
+        "tag_mod_3_2"
+      ],
+      "createdAt": 1603327963509,
+      "author": {
+        "username": "authoress-ampas3",
+        "bio": "",
+        "image": "",
+        "following": true
+      },
+      "description": "description",
+      "title": "title",
+      "body": "body",
+      "slug": "title-t2wr94",
+      "updatedAt": 1603327963509,
+      "favoritesCount": 0,
+      "favorited": false
+    },
+    {
+      "tagList": [
+        "90y5rm",
+        "tag_1",
+        "tag_mod_2_1",
+        "tag_mod_3_1"
+      ],
+      "createdAt": 1603327963471,
+      "author": {
+        "username": "author-dh163w",
+        "bio": "",
+        "image": "",
+        "following": true
+      },
+      "description": "description",
+      "title": "title",
+      "body": "body",
+      "slug": "title-rx9ax6",
+      "updatedAt": 1603327963471,
+      "favoritesCount": 0,
+      "favorited": false
+    },
+    {
+      "tagList": [
+        "ow7zto",
+        "tag_0",
+        "tag_mod_2_0",
+        "tag_mod_3_0"
+      ],
+      "createdAt": 1603327963446,
+      "author": {
+        "username": "authoress-ampas3",
+        "bio": "",
+        "image": "",
+        "following": true
+      },
+      "description": "description",
+      "title": "title",
+      "body": "body",
+      "slug": "title-gz1cgd",
+      "updatedAt": 1603327963446,
+      "favoritesCount": 0,
+      "favorited": false
+    }
+  ]
+}
+</code></pre>
+<h3 id="shoulddisallowunauthenticatedfeed">should disallow unauthenticated feed</h3>
+<pre><code>GET /articles/feed
+</code></pre>
+<pre><code>422 Unprocessable Entity
+
+{
+  "errors": {
+    "body": [
+      "Must be logged in."
+    ]
+  }
+}
+</code></pre>
+<h2 id="tags">Tags</h2>
+<h3 id="shouldgettags">should get tags</h3>
+<pre><code>GET /tags
+</code></pre>
+<pre><code>200 OK
+
+{
+  "tags": [
+    "hu5y7x",
+    "tag_17",
+    "tag_mod_2_1",
+    "tag_mod_3_2",
+    "3ltll2",
+    "tag_12",
+    "tag_mod_2_0",
+    "tag_mod_3_0",
+    "9j01da",
+    "tag_14",
+    "90y5rm",
+    "tag_1",
+    "tag_mod_3_1",
+    "s8i3r4",
+    "tag_16",
+    "lehgsw",
+    "tag_19",
+    "11gc7a",
+    "tag_6",
+    "im1369",
+    "tag_10",
+    "7p4ozm",
+    "tag_18",
+    "3vyebr",
+    "tag_3",
+    "lv8gen",
+    "tag_2",
+    "j2fpyt",
+    "tag_11",
+    "mc0ron",
+    "tag_4",
+    "tag_9",
+    "wsq3cu",
+    "tag_a",
+    "tag_b",
+    "ow7zto",
+    "tag_0",
+    "poru3j",
+    "tag_8",
+    "tag_5",
+    "vfkq4l",
+    "mz6frb",
+    "tag_13",
+    "33ld2w",
+    "tag_7",
+    "15tkih",
+    "tag_15"
+  ]
+}
+</code></pre>
+<h1 id="comment">Comment</h1>
+<pre><code>POST /users
+
+{
+  "user": {
+    "email": "author-o1atfr@email.com",
+    "username": "author-o1atfr",
+    "password": "password"
+  }
+}
+</code></pre>
+<pre><code>200 OK
+
+{
+  "user": {
+    "email": "author-o1atfr@email.com",
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImF1dGhvci1vMWF0ZnIiLCJpYXQiOjE2MDMzMjc5NjUsImV4cCI6MTYwMzUwMDc2NX0.GIUTG3FqRRr0uaIoG-mnR3yObAvi72EAMGqhlTQU2co",
+    "username": "author-o1atfr",
+    "bio": "",
+    "image": ""
+  }
+}
+</code></pre>
+<pre><code>POST /users
+
+{
+  "user": {
+    "email": "commenter-708a3e@email.com",
+    "username": "commenter-708a3e",
+    "password": "password"
+  }
+}
+</code></pre>
+<pre><code>200 OK
+
+{
+  "user": {
+    "email": "commenter-708a3e@email.com",
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImNvbW1lbnRlci03MDhhM2UiLCJpYXQiOjE2MDMzMjc5NjUsImV4cCI6MTYwMzUwMDc2NX0.7jCvdVOG5H2WAWDtlTv8bx7Uv9cm1PjY-8yAQ_F4vfk",
+    "username": "commenter-708a3e",
+    "bio": "",
+    "image": ""
+  }
+}
+</code></pre>
+<pre><code>POST /articles
+
+{
+  "article": {
+    "title": "title",
+    "description": "description",
+    "body": "body"
+  }
+}
+</code></pre>
+<pre><code>200 OK
+
+{
+  "article": {
+    "slug": "title-zg4q0g",
+    "title": "title",
+    "description": "description",
+    "body": "body",
+    "createdAt": 1603327965626,
+    "updatedAt": 1603327965626,
+    "author": {
+      "username": "author-o1atfr",
+      "bio": "",
+      "image": "",
+      "following": false
+    },
+    "tagList": [],
+    "favorited": false,
+    "favoritesCount": 0
+  }
+}
+</code></pre>
+<h2 id="create-1">Create</h2>
+<h3 id="shouldcreatecomment">should create comment</h3>
+<pre><code>POST /articles/title-zg4q0g/comments
+
+{
+  "comment": {
+    "body": "test comment lgykgl"
+  }
+}
+</code></pre>
+<pre><code>200 OK
+
+{
+  "comment": {
+    "id": "3ff174c7-3daf-49a0-877c-a2e9f6bcd51b",
+    "slug": "title-zg4q0g",
+    "body": "test comment lgykgl",
+    "createdAt": 1603327965657,
+    "updatedAt": 1603327965657,
+    "author": {
+      "username": "commenter-708a3e",
+      "bio": "",
+      "image": "",
+      "following": false
+    }
+  }
+}
+</code></pre>
+<pre><code>POST /articles/title-zg4q0g/comments
+
+{
+  "comment": {
+    "body": "test comment v9e0wn"
+  }
+}
+</code></pre>
+<pre><code>200 OK
+
+{
+  "comment": {
+    "id": "3002d48d-8412-4940-a0a9-958140747e98",
+    "slug": "title-zg4q0g",
+    "body": "test comment v9e0wn",
+    "createdAt": 1603327965692,
+    "updatedAt": 1603327965692,
+    "author": {
+      "username": "commenter-708a3e",
+      "bio": "",
+      "image": "",
+      "following": false
+    }
+  }
+}
+</code></pre>
+<pre><code>POST /articles/title-zg4q0g/comments
+
+{
+  "comment": {
+    "body": "test comment yt2566"
+  }
+}
+</code></pre>
+<pre><code>200 OK
+
+{
+  "comment": {
+    "id": "e64cc4c5-0044-4522-8cca-2b0a75d2423b",
+    "slug": "title-zg4q0g",
+    "body": "test comment yt2566",
+    "createdAt": 1603327965725,
+    "updatedAt": 1603327965725,
+    "author": {
+      "username": "commenter-708a3e",
+      "bio": "",
+      "image": "",
+      "following": false
+    }
+  }
+}
+</code></pre>
+<pre><code>POST /articles/title-zg4q0g/comments
+
+{
+  "comment": {
+    "body": "test comment 2lh0z"
+  }
+}
+</code></pre>
+<pre><code>200 OK
+
+{
+  "comment": {
+    "id": "b78fd819-3504-461a-a18a-7574c280c70d",
+    "slug": "title-zg4q0g",
+    "body": "test comment 2lh0z",
+    "createdAt": 1603327965772,
+    "updatedAt": 1603327965772,
+    "author": {
+      "username": "commenter-708a3e",
+      "bio": "",
+      "image": "",
+      "following": false
+    }
+  }
+}
+</code></pre>
+<pre><code>POST /articles/title-zg4q0g/comments
+
+{
+  "comment": {
+    "body": "test comment zfq165"
+  }
+}
+</code></pre>
+<pre><code>200 OK
+
+{
+  "comment": {
+    "id": "28d22807-7a21-4b26-8b3d-2741e8978569",
+    "slug": "title-zg4q0g",
+    "body": "test comment zfq165",
+    "createdAt": 1603327965801,
+    "updatedAt": 1603327965801,
+    "author": {
+      "username": "commenter-708a3e",
+      "bio": "",
+      "image": "",
+      "following": false
+    }
+  }
+}
+</code></pre>
+<pre><code>POST /articles/title-zg4q0g/comments
+
+{
+  "comment": {
+    "body": "test comment w0oj4k"
+  }
+}
+</code></pre>
+<pre><code>200 OK
+
+{
+  "comment": {
+    "id": "ef7af888-cbf9-4752-8172-87f0914cc4f2",
+    "slug": "title-zg4q0g",
+    "body": "test comment w0oj4k",
+    "createdAt": 1603327965827,
+    "updatedAt": 1603327965827,
+    "author": {
+      "username": "commenter-708a3e",
+      "bio": "",
+      "image": "",
+      "following": false
+    }
+  }
+}
+</code></pre>
+<pre><code>POST /articles/title-zg4q0g/comments
+
+{
+  "comment": {
+    "body": "test comment pwjn95"
+  }
+}
+</code></pre>
+<pre><code>200 OK
+
+{
+  "comment": {
+    "id": "43e9ed60-5bb6-478e-a75e-5c2e3b1eb9ff",
+    "slug": "title-zg4q0g",
+    "body": "test comment pwjn95",
+    "createdAt": 1603327965856,
+    "updatedAt": 1603327965856,
+    "author": {
+      "username": "commenter-708a3e",
+      "bio": "",
+      "image": "",
+      "following": false
+    }
+  }
+}
+</code></pre>
+<pre><code>POST /articles/title-zg4q0g/comments
+
+{
+  "comment": {
+    "body": "test comment xehq9c"
+  }
+}
+</code></pre>
+<pre><code>200 OK
+
+{
+  "comment": {
+    "id": "79f3a0a1-2490-4453-ac93-158a8ff8882c",
+    "slug": "title-zg4q0g",
+    "body": "test comment xehq9c",
+    "createdAt": 1603327965883,
+    "updatedAt": 1603327965883,
+    "author": {
+      "username": "commenter-708a3e",
+      "bio": "",
+      "image": "",
+      "following": false
+    }
+  }
+}
+</code></pre>
+<pre><code>POST /articles/title-zg4q0g/comments
+
+{
+  "comment": {
+    "body": "test comment vrpeq7"
+  }
+}
+</code></pre>
+<pre><code>200 OK
+
+{
+  "comment": {
+    "id": "f92801e3-28e6-4666-917f-3b42a7c85212",
+    "slug": "title-zg4q0g",
+    "body": "test comment vrpeq7",
+    "createdAt": 1603327965913,
+    "updatedAt": 1603327965913,
+    "author": {
+      "username": "commenter-708a3e",
+      "bio": "",
+      "image": "",
+      "following": false
+    }
+  }
+}
+</code></pre>
+<pre><code>POST /articles/title-zg4q0g/comments
+
+{
+  "comment": {
+    "body": "test comment q0z5qw"
+  }
+}
+</code></pre>
+<pre><code>200 OK
+
+{
+  "comment": {
+    "id": "1f252431-1439-4acf-b9d9-3282f02516b7",
+    "slug": "title-zg4q0g",
+    "body": "test comment q0z5qw",
+    "createdAt": 1603327965938,
+    "updatedAt": 1603327965938,
+    "author": {
+      "username": "commenter-708a3e",
+      "bio": "",
+      "image": "",
+      "following": false
+    }
+  }
+}
+</code></pre>
+<h3 id="shoulddisallowunauthenticateduser-1">should disallow unauthenticated user</h3>
+<pre><code>POST /articles/title-zg4q0g/comments
+
+{}
+</code></pre>
+<pre><code>422 Unprocessable Entity
+
+{
+  "errors": {
+    "body": [
+      "Must be logged in."
+    ]
+  }
+}
+</code></pre>
+<h3 id="shouldenforcecommentbody">should enforce comment body</h3>
+<pre><code>POST /articles/title-zg4q0g/comments
+
+{}
+</code></pre>
+<pre><code>422 Unprocessable Entity
+
+{
+  "errors": {
+    "body": [
+      "Comment must be specified."
+    ]
+  }
+}
+</code></pre>
+<h3 id="shoulddisallownonexistentarticle">should disallow non-existent article</h3>
+<pre><code>POST /articles/foobar/comments
+
+{
+  "comment": {
+    "body": "test comment e9mh0z"
+  }
+}
+</code></pre>
+<pre><code>422 Unprocessable Entity
+
+{
+  "errors": {
+    "body": [
+      "Article not found: [foobar]"
+    ]
+  }
+}
+</code></pre>
+<h2 id="get-1">Get</h2>
+<h3 id="shouldgetallcommentsforarticle">should get all comments for article</h3>
+<pre><code>GET /articles/title-zg4q0g/comments
+</code></pre>
+<pre><code>200 OK
+
+{
+  "comments": [
+    {
+      "createdAt": 1603327965692,
+      "id": "3002d48d-8412-4940-a0a9-958140747e98",
+      "body": "test comment v9e0wn",
+      "slug": "title-zg4q0g",
+      "author": {
+        "username": "commenter-708a3e",
+        "bio": "",
+        "image": "",
+        "following": false
+      },
+      "updatedAt": 1603327965692
+    },
+    {
+      "createdAt": 1603327965913,
+      "id": "f92801e3-28e6-4666-917f-3b42a7c85212",
+      "body": "test comment vrpeq7",
+      "slug": "title-zg4q0g",
+      "author": {
+        "username": "commenter-708a3e",
+        "bio": "",
+        "image": "",
+        "following": false
+      },
+      "updatedAt": 1603327965913
+    },
+    {
+      "createdAt": 1603327965883,
+      "id": "79f3a0a1-2490-4453-ac93-158a8ff8882c",
+      "body": "test comment xehq9c",
+      "slug": "title-zg4q0g",
+      "author": {
+        "username": "commenter-708a3e",
+        "bio": "",
+        "image": "",
+        "following": false
+      },
+      "updatedAt": 1603327965883
+    },
+    {
+      "createdAt": 1603327965827,
+      "id": "ef7af888-cbf9-4752-8172-87f0914cc4f2",
+      "body": "test comment w0oj4k",
+      "slug": "title-zg4q0g",
+      "author": {
+        "username": "commenter-708a3e",
+        "bio": "",
+        "image": "",
+        "following": false
+      },
+      "updatedAt": 1603327965827
+    },
+    {
+      "createdAt": 1603327965657,
+      "id": "3ff174c7-3daf-49a0-877c-a2e9f6bcd51b",
+      "body": "test comment lgykgl",
+      "slug": "title-zg4q0g",
+      "author": {
+        "username": "commenter-708a3e",
+        "bio": "",
+        "image": "",
+        "following": false
+      },
+      "updatedAt": 1603327965657
+    },
+    {
+      "createdAt": 1603327965725,
+      "id": "e64cc4c5-0044-4522-8cca-2b0a75d2423b",
+      "body": "test comment yt2566",
+      "slug": "title-zg4q0g",
+      "author": {
+        "username": "commenter-708a3e",
+        "bio": "",
+        "image": "",
+        "following": false
+      },
+      "updatedAt": 1603327965725
+    },
+    {
+      "createdAt": 1603327965856,
+      "id": "43e9ed60-5bb6-478e-a75e-5c2e3b1eb9ff",
+      "body": "test comment pwjn95",
+      "slug": "title-zg4q0g",
+      "author": {
+        "username": "commenter-708a3e",
+        "bio": "",
+        "image": "",
+        "following": false
+      },
+      "updatedAt": 1603327965856
+    },
+    {
+      "createdAt": 1603327965772,
+      "id": "b78fd819-3504-461a-a18a-7574c280c70d",
+      "body": "test comment 2lh0z",
+      "slug": "title-zg4q0g",
+      "author": {
+        "username": "commenter-708a3e",
+        "bio": "",
+        "image": "",
+        "following": false
+      },
+      "updatedAt": 1603327965772
+    },
+    {
+      "createdAt": 1603327965938,
+      "id": "1f252431-1439-4acf-b9d9-3282f02516b7",
+      "body": "test comment q0z5qw",
+      "slug": "title-zg4q0g",
+      "author": {
+        "username": "commenter-708a3e",
+        "bio": "",
+        "image": "",
+        "following": false
+      },
+      "updatedAt": 1603327965938
+    },
+    {
+      "createdAt": 1603327965801,
+      "id": "28d22807-7a21-4b26-8b3d-2741e8978569",
+      "body": "test comment zfq165",
+      "slug": "title-zg4q0g",
+      "author": {
+        "username": "commenter-708a3e",
+        "bio": "",
+        "image": "",
+        "following": false
+      },
+      "updatedAt": 1603327965801
+    }
+  ]
+}
+</code></pre>
+<h2 id="delete-1">Delete</h2>
+<h3 id="shoulddeletecomment">should delete comment</h3>
+<pre><code>DELETE /articles/title-zg4q0g/comments/3ff174c7-3daf-49a0-877c-a2e9f6bcd51b
+</code></pre>
+<pre><code>200 OK
+
+{}
+</code></pre>
+<h3 id="onlycommentauthorshouldbeabletodeletecomment">only comment author should be able to delete comment</h3>
+<pre><code>DELETE /articles/title-zg4q0g/comments/3002d48d-8412-4940-a0a9-958140747e98
+</code></pre>
+<pre><code>422 Unprocessable Entity
+
+{
+  "errors": {
+    "body": [
+      "Only comment author can delete: [commenter-708a3e]"
+    ]
+  }
+}
+</code></pre>
+<h3 id="shoulddisallowunauthenticateduser-2">should disallow unauthenticated user</h3>
+<pre><code>DELETE /articles/title-zg4q0g/comments/3002d48d-8412-4940-a0a9-958140747e98
+</code></pre>
+<pre><code>422 Unprocessable Entity
+
+{
+  "errors": {
+    "body": [
+      "Must be logged in."
+    ]
+  }
+}
+</code></pre>
+<h3 id="shoulddisallowdeletingunknowncomment">should disallow deleting unknown comment</h3>
+<pre><code>DELETE /articles/title-zg4q0g/comments/foobar_id
+</code></pre>
+<pre><code>422 Unprocessable Entity
+
+{
+  "errors": {
+    "body": [
+      "Comment ID not found: [foobar_id]"
+    ]
+  }
+}
+</code></pre>
+<h1 id="user">User</h1>
+<h2 id="create-2">Create</h2>
+<h3 id="shouldcreateuser">should create user</h3>
+<pre><code>POST /users
+
+{
+  "user": {
+    "email": "user1-0.scgfothjxg@email.com",
+    "username": "user1-0.scgfothjxg",
+    "password": "password"
+  }
+}
+</code></pre>
+<pre><code>200 OK
+
+{
+  "user": {
+    "email": "user1-0.scgfothjxg@email.com",
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InVzZXIxLTAuc2NnZm90aGp4ZyIsImlhdCI6MTYwMzMyNzk2NiwiZXhwIjoxNjAzNTAwNzY2fQ.AfLpjlrq32fbjV3aWud-kOuWXQ3zJXKPk2c_o2GVaok",
+    "username": "user1-0.scgfothjxg",
+    "bio": "",
+    "image": ""
+  }
+}
+</code></pre>
+<h3 id="shoulddisallowsameusername">should disallow same username</h3>
+<pre><code>POST /users
+
+{
+  "user": {
+    "email": "user1-0.scgfothjxg@email.com",
+    "username": "user1-0.scgfothjxg",
+    "password": "password"
+  }
+}
+</code></pre>
+<pre><code>422 Unprocessable Entity
+
+{
+  "errors": {
+    "body": [
+      "Username already taken: [user1-0.scgfothjxg]"
+    ]
+  }
+}
+</code></pre>
+<h3 id="shoulddisallowsameemail">should disallow same email</h3>
+<pre><code>POST /users
+
+{
+  "user": {
+    "username": "user2",
+    "email": "user1-0.scgfothjxg@email.com",
+    "password": "password"
+  }
+}
+</code></pre>
+<pre><code>422 Unprocessable Entity
+
+{
+  "errors": {
+    "body": [
+      "Email already taken: [user1-0.scgfothjxg@email.com]"
+    ]
+  }
+}
+</code></pre>
+<h3 id="shouldenforcerequiredfields-1">should enforce required fields</h3>
+<pre><code>POST /users
+
+{}
+</code></pre>
+<pre><code>422 Unprocessable Entity
+
+{
+  "errors": {
+    "body": [
+      "User must be specified."
+    ]
+  }
+}
+</code></pre>
+<pre><code>POST /users
+
+{
+  "user": {
+    "foo": 1
+  }
+}
+</code></pre>
+<pre><code>422 Unprocessable Entity
+
+{
+  "errors": {
+    "body": [
+      "Username must be specified."
+    ]
+  }
+}
+</code></pre>
+<pre><code>POST /users
+
+{
+  "user": {
+    "username": 1
+  }
+}
+</code></pre>
+<pre><code>422 Unprocessable Entity
+
+{
+  "errors": {
+    "body": [
+      "Email must be specified."
+    ]
+  }
+}
+</code></pre>
+<pre><code>POST /users
+
+{
+  "user": {
+    "username": 1,
+    "email": 2
+  }
+}
+</code></pre>
+<pre><code>422 Unprocessable Entity
+
+{
+  "errors": {
+    "body": [
+      "Password must be specified."
+    ]
+  }
+}
+</code></pre>
+<h2 id="login">Login</h2>
+<h3 id="shouldlogin">should login</h3>
+<pre><code>POST /users/login
+
+{
+  "user": {
+    "email": "user1-0.scgfothjxg@email.com",
+    "password": "password"
+  }
+}
+</code></pre>
+<pre><code>200 OK
+
+{
+  "user": {
+    "email": "user1-0.scgfothjxg@email.com",
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InVzZXIxLTAuc2NnZm90aGp4ZyIsImlhdCI6MTYwMzMyNzk2NiwiZXhwIjoxNjAzNTAwNzY2fQ.AfLpjlrq32fbjV3aWud-kOuWXQ3zJXKPk2c_o2GVaok",
+    "username": "user1-0.scgfothjxg",
+    "bio": "",
+    "image": ""
+  }
+}
+</code></pre>
+<h3 id="shoulddisallowunknownemail">should disallow unknown email</h3>
+<pre><code>POST /users/login
+
+{
+  "user": {
+    "email": "0.kp8ksq3qi6a",
+    "password": "somepassword"
+  }
+}
+</code></pre>
+<pre><code>422 Unprocessable Entity
+
+{
+  "errors": {
+    "body": [
+      "Email not found: [0.kp8ksq3qi6a]"
+    ]
+  }
+}
+</code></pre>
+<h3 id="shoulddisallowwrongpassword">should disallow wrong password</h3>
+<pre><code>POST /users/login
+
+{
+  "user": {
+    "email": "user1-0.scgfothjxg@email.com",
+    "password": "0.v7575zc2oud"
+  }
+}
+</code></pre>
+<pre><code>422 Unprocessable Entity
+
+{
+  "errors": {
+    "body": [
+      "Wrong password."
+    ]
+  }
+}
+</code></pre>
+<h3 id="shouldenforcerequiredfields-2">should enforce required fields</h3>
+<pre><code>POST /users/login
+
+{}
+</code></pre>
+<pre><code>422 Unprocessable Entity
+
+{
+  "errors": {
+    "body": [
+      "User must be specified."
+    ]
+  }
+}
+</code></pre>
+<pre><code>POST /users/login
+
+{
+  "user": {}
+}
+</code></pre>
+<pre><code>422 Unprocessable Entity
+
+{
+  "errors": {
+    "body": [
+      "Email must be specified."
+    ]
+  }
+}
+</code></pre>
+<pre><code>POST /users/login
+
+{
+  "user": {
+    "email": "someemail"
+  }
+}
+</code></pre>
+<pre><code>422 Unprocessable Entity
+
+{
+  "errors": {
+    "body": [
+      "Password must be specified."
+    ]
+  }
+}
+</code></pre>
+<h2 id="get-2">Get</h2>
+<h3 id="shouldgetcurrentuser">should get current user</h3>
+<pre><code>GET /user
+</code></pre>
+<pre><code>200 OK
+
+{
+  "user": {
+    "email": "user1-0.scgfothjxg@email.com",
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InVzZXIxLTAuc2NnZm90aGp4ZyIsImlhdCI6MTYwMzMyNzk2NiwiZXhwIjoxNjAzNTAwNzY2fQ.AfLpjlrq32fbjV3aWud-kOuWXQ3zJXKPk2c_o2GVaok",
+    "username": "user1-0.scgfothjxg",
+    "bio": "",
+    "image": ""
+  }
+}
+</code></pre>
+<h3 id="shoulddisallowbadtokens">should disallow bad tokens</h3>
+<pre><code>GET /user
+</code></pre>
+<pre><code>422 Unprocessable Entity
+
+{
+  "errors": {
+    "body": [
+      "Token not present or invalid."
+    ]
+  }
+}
+</code></pre>
+<pre><code>GET /user
+</code></pre>
+<pre><code>422 Unprocessable Entity
+
+{
+  "errors": {
+    "body": [
+      "Token not present or invalid."
+    ]
+  }
+}
+</code></pre>
+<pre><code>GET /user
+</code></pre>
+<pre><code>422 Unprocessable Entity
+
+{
+  "errors": {
+    "body": [
+      "Token not present or invalid."
+    ]
+  }
+}
+</code></pre>
+<pre><code>GET /user
+</code></pre>
+<pre><code>422 Unprocessable Entity
+
+{
+  "errors": {
+    "body": [
+      "Token not present or invalid."
+    ]
+  }
+}
+</code></pre>
+<h2 id="profile">Profile</h2>
+<h3 id="shouldgetprofile">should get profile</h3>
+<pre><code>GET /profiles/user1-0.scgfothjxg
+</code></pre>
+<pre><code>200 OK
+
+{
+  "profile": {
+    "username": "user1-0.scgfothjxg",
+    "bio": "",
+    "image": "",
+    "following": false
+  }
+}
+</code></pre>
+<h3 id="shoulddisallowunknownusername">should disallow unknown username</h3>
+<pre><code>GET /profiles/foo_0.cr0v6mwqrzq
+</code></pre>
+<pre><code>422 Unprocessable Entity
+
+{
+  "errors": {
+    "body": [
+      "User not found: [foo_0.cr0v6mwqrzq]"
+    ]
+  }
+}
+</code></pre>
+<h3 id="shouldfollowunfollowuser">should follow/unfollow user</h3>
+<pre><code>POST /users
+
+{
+  "user": {
+    "username": "followed_user",
+    "email": "followed_user@mail.com",
+    "password": "password"
+  }
+}
+</code></pre>
+<pre><code>200 OK
+
+{
+  "user": {
+    "email": "followed_user@mail.com",
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImZvbGxvd2VkX3VzZXIiLCJpYXQiOjE2MDMzMjc5NjYsImV4cCI6MTYwMzUwMDc2Nn0.ZUV5Trsbu5UGrUlw4MI5O2yG3aIrfR684-TJshElL-Q",
+    "username": "followed_user",
+    "bio": "",
+    "image": ""
+  }
+}
+</code></pre>
+<pre><code>POST /profiles/followed_user/follow
+</code></pre>
+<pre><code>200 OK
+
+{
+  "profile": {
+    "username": "followed_user",
+    "bio": "",
+    "image": "",
+    "following": true
+  }
+}
+</code></pre>
+<pre><code>POST /profiles/followed_user/follow
+</code></pre>
+<pre><code>200 OK
+
+{
+  "profile": {
+    "username": "followed_user",
+    "bio": "",
+    "image": "",
+    "following": true
+  }
+}
+</code></pre>
+<pre><code>GET /profiles/followed_user
+</code></pre>
+<pre><code>200 OK
+
+{
+  "profile": {
+    "username": "followed_user",
+    "bio": "",
+    "image": "",
+    "following": true
+  }
+}
+</code></pre>
+<pre><code>GET /profiles/followed_user
+</code></pre>
+<pre><code>200 OK
+
+{
+  "profile": {
+    "username": "followed_user",
+    "bio": "",
+    "image": "",
+    "following": false
+  }
+}
+</code></pre>
+<pre><code>POST /users
+
+{
+  "user": {
+    "username": "user2-0.fl16gk7xrsu",
+    "email": "user2-0.fl16gk7xrsu@mail.com",
+    "password": "password"
+  }
+}
+</code></pre>
+<pre><code>200 OK
+
+{
+  "user": {
+    "email": "user2-0.fl16gk7xrsu@mail.com",
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InVzZXIyLTAuZmwxNmdrN3hyc3UiLCJpYXQiOjE2MDMzMjc5NjYsImV4cCI6MTYwMzUwMDc2Nn0.yqVTlrZFV8scjxvuMozWx_IeNbpb99fJMrCpKGHhnyw",
+    "username": "user2-0.fl16gk7xrsu",
+    "bio": "",
+    "image": ""
+  }
+}
+</code></pre>
+<pre><code>POST /profiles/followed_user/follow
+</code></pre>
+<pre><code>200 OK
+
+{
+  "profile": {
+    "username": "followed_user",
+    "bio": "",
+    "image": "",
+    "following": true
+  }
+}
+</code></pre>
+<pre><code>DELETE /profiles/followed_user/follow
+</code></pre>
+<pre><code>200 OK
+
+{
+  "profile": {
+    "username": "followed_user",
+    "bio": "",
+    "image": "",
+    "following": false
+  }
+}
+</code></pre>
+<pre><code>DELETE /profiles/followed_user/follow
+</code></pre>
+<pre><code>200 OK
+
+{
+  "profile": {
+    "username": "followed_user",
+    "bio": "",
+    "image": "",
+    "following": false
+  }
+}
+</code></pre>
+<pre><code>DELETE /profiles/followed_user/follow
+</code></pre>
+<pre><code>200 OK
+
+{
+  "profile": {
+    "username": "followed_user",
+    "bio": "",
+    "image": "",
+    "following": false
+  }
+}
+</code></pre>
+<h3 id="shoulddisallowfollowingwithbadtoken">should disallow following with bad token</h3>
+<pre><code>POST /profiles/followed_user/follow
+</code></pre>
+<pre><code>422 Unprocessable Entity
+
+{
+  "errors": {
+    "body": [
+      "Token not present or invalid."
+    ]
+  }
+}
+</code></pre>
+<h2 id="update-1">Update</h2>
+<h3 id="shouldupdateuser">should update user</h3>
+<pre><code>PUT /user
+
+{
+  "user": {
+    "email": "updated-user1-0.scgfothjxg@email.com"
+  }
+}
+</code></pre>
+<pre><code>200 OK
+
+{
+  "user": {
+    "username": "user1-0.scgfothjxg",
+    "email": "updated-user1-0.scgfothjxg@email.com",
+    "image": "",
+    "bio": "",
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InVzZXIxLTAuc2NnZm90aGp4ZyIsImlhdCI6MTYwMzMyNzk2NiwiZXhwIjoxNjAzNTAwNzY2fQ.AfLpjlrq32fbjV3aWud-kOuWXQ3zJXKPk2c_o2GVaok"
+  }
+}
+</code></pre>
+<pre><code>PUT /user
+
+{
+  "user": {
+    "password": "newpassword"
+  }
+}
+</code></pre>
+<pre><code>200 OK
+
+{
+  "user": {
+    "username": "user1-0.scgfothjxg",
+    "email": "updated-user1-0.scgfothjxg@email.com",
+    "image": "",
+    "bio": "",
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InVzZXIxLTAuc2NnZm90aGp4ZyIsImlhdCI6MTYwMzMyNzk2NiwiZXhwIjoxNjAzNTAwNzY2fQ.AfLpjlrq32fbjV3aWud-kOuWXQ3zJXKPk2c_o2GVaok"
+  }
+}
+</code></pre>
+<pre><code>PUT /user
+
+{
+  "user": {
+    "bio": "newbio"
+  }
+}
+</code></pre>
+<pre><code>200 OK
+
+{
+  "user": {
+    "username": "user1-0.scgfothjxg",
+    "bio": "newbio",
+    "image": "",
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InVzZXIxLTAuc2NnZm90aGp4ZyIsImlhdCI6MTYwMzMyNzk2NiwiZXhwIjoxNjAzNTAwNzY2fQ.AfLpjlrq32fbjV3aWud-kOuWXQ3zJXKPk2c_o2GVaok"
+  }
+}
+</code></pre>
+<pre><code>PUT /user
+
+{
+  "user": {
+    "image": "newimage"
+  }
+}
+</code></pre>
+<pre><code>200 OK
+
+{
+  "user": {
+    "username": "user1-0.scgfothjxg",
+    "image": "newimage",
+    "bio": "newbio",
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InVzZXIxLTAuc2NnZm90aGp4ZyIsImlhdCI6MTYwMzMyNzk2NiwiZXhwIjoxNjAzNTAwNzY2fQ.AfLpjlrq32fbjV3aWud-kOuWXQ3zJXKPk2c_o2GVaok"
+  }
+}
+</code></pre>
+<h3 id="shoulddisallowmissingtokenemailinupdate">should disallow missing token/email in update</h3>
+<pre><code>PUT /user
+</code></pre>
+<pre><code>422 Unprocessable Entity
+
+{
+  "errors": {
+    "body": [
+      "Token not present or invalid."
+    ]
+  }
+}
+</code></pre>
+<pre><code>PUT /user
+
+{}
+</code></pre>
+<pre><code>422 Unprocessable Entity
+
+{
+  "errors": {
+    "body": [
+      "User must be specified."
+    ]
+  }
+}
+</code></pre>
+<h3 id="shoulddisallowreusingemail">should disallow reusing email</h3>
+<pre><code>POST /users
+
+{
+  "user": {
+    "email": "user2-0.e9x32o10lof@email.com",
+    "username": "user2-0.e9x32o10lof",
+    "password": "password"
+  }
+}
+</code></pre>
+<pre><code>200 OK
+
+{
+  "user": {
+    "email": "user2-0.e9x32o10lof@email.com",
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InVzZXIyLTAuZTl4MzJvMTBsb2YiLCJpYXQiOjE2MDMzMjc5NjYsImV4cCI6MTYwMzUwMDc2Nn0.FoGquP9WImzs2G2rKpVxClBw6xblNCRqJG9jqlvO5YI",
+    "username": "user2-0.e9x32o10lof",
+    "bio": "",
+    "image": ""
+  }
+}
+</code></pre>
+<pre><code>PUT /user
+
+{
+  "user": {
+    "email": "user2-0.e9x32o10lof@email.com"
+  }
+}
+</code></pre>
+<pre><code>422 Unprocessable Entity
+
+{
+  "errors": {
+    "body": [
+      "Email already taken: [user2-0.e9x32o10lof@email.com]"
+    ]
+  }
+}
+</code></pre>
+<h1 id="util">Util</h1>
+<h2 id="ping">Ping</h2>
+<h3 id="shouldping">should ping</h3>
+<pre><code>GET /ping
+</code></pre>
+<pre><code>200 OK
+
+{
+  "pong": "2020-10-22T00:52:46.944Z",
+  "AWS_REGION": "us-east-1",
+  "DYNAMODB_NAMESPACE": "dev"
+}
+</code></pre>
