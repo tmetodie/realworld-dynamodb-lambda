@@ -2,8 +2,6 @@ version: 0.2
 
 env:
   shell: bash
-  parameter-store:
-    key: "value"
 
 phases:
   pre_build:
