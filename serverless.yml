@@ -4,6 +4,7 @@ provider:
   name: aws
   runtime: nodejs10.x
   region: us-east-1
+  stackName: ${self:service.name}-${self:custom.region}-${self:custom.stage}
   environment:
     DYNAMODB_NAMESPACE: ${opt:stage, "dev"}
   iamRoleStatements:
@@ -224,7 +225,7 @@ resources:
         ProvisionedThroughput:
           ReadCapacityUnits: 1
           WriteCapacityUnits: 1
-        TableName: realworld-${self:provider.environment.DYNAMODB_NAMESPACE}-users
+        TableName: realworld-${self:custom.region}-${self:custom.stage}-users
         GlobalSecondaryIndexes:
           -
             IndexName: email
@@ -259,7 +260,7 @@ resources:
         ProvisionedThroughput:
           ReadCapacityUnits: 1
           WriteCapacityUnits: 1
-        TableName: realworld-${self:provider.environment.DYNAMODB_NAMESPACE}-articles
+        TableName: realworld-${self:custom.region}-${self:custom.stage}-articles
         GlobalSecondaryIndexes:
           -
             IndexName: updatedAt
@@ -294,7 +295,7 @@ resources:
         ProvisionedThroughput:
           ReadCapacityUnits: 1
           WriteCapacityUnits: 1
-        TableName: realworld-${self:provider.environment.DYNAMODB_NAMESPACE}-comments
+        TableName: realworld-${self:custom.region}-${self:custom.stage}-comments
         GlobalSecondaryIndexes:
           -
             IndexName: article

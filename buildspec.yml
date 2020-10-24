@@ -1,0 +1,24 @@
+version: 0.2
+
+env:
+  shell: bash
+  parameter-store:
+    key: "value"
+
+phases:
+  pre_build:
+    commands:
+      - echo Entered the pre_build phase...
+      - npm install
+      - serverless plugin install --name serverless-dynamodb-local
+      - serverless plugin install --name serverless-offline
+      - CI=true npm run test
+  build:
+    commands:
+      - echo Entered the build phase...
+      - echo Deploying the backend package...
+      - npm run deploy
+  post_build:
+    commands:
+      - echo Entered the post_build phase..
+      - STAGE=$STAGE REGION=$REGION npm run test:deployed
