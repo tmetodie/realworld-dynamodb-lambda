@@ -7,9 +7,11 @@ phases:
   pre_build:
     commands:
       - echo Entered the pre_build phase...
-      - npm install
-      - serverless plugin install --name serverless-dynamodb-local
-      - serverless plugin install --name serverless-offline
+      - |
+        npm install
+        npm install -g serverless
+        serverless plugin install --name serverless-dynamodb-local
+        serverless plugin install --name serverless-offline
       - CI=true npm run test
   build:
     commands:
@@ -20,3 +22,5 @@ phases:
     commands:
       - echo Entered the post_build phase..
       - STAGE=$STAGE REGION=$REGION npm run test:deployed
+      - |
+        serverless info --verbose ${STAGE:+--stage $STAGE} ${REGION:+--region $REGION} | grep '^ServiceEndpoint:' | grep -o 'https://.*'
