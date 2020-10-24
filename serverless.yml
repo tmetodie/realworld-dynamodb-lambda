@@ -2,7 +2,7 @@ service: realworld
 
 provider:
   name: aws
-  runtime: nodejs8.10
+  runtime: nodejs10.x
   region: us-east-1
   environment:
     DYNAMODB_NAMESPACE: ${opt:stage, "dev"}
@@ -17,6 +17,11 @@ provider:
         - dynamodb:DeleteItem
       Resource: "arn:aws:dynamodb:${opt:region, self:provider.region}:*:table/*"
 
+custom:
+  region: ${opt:region, self:provider.region}
+  default_stage: dev
+  stage: ${opt:stage, self:custom.default_stage}
+
 package:
   exclude:
     - test/**
@@ -27,7 +32,6 @@ package:
 plugins:
   - serverless-dynamodb-local
   - serverless-offline
-
 functions:
 
   ## Users API
@@ -303,3 +307,18 @@ resources:
             ProvisionedThroughput:
               ReadCapacityUnits: 1
               WriteCapacityUnits: 1
+    ApiGwEndpoint:
+      Type: AWS::SSM::Parameter
+      Properties: 
+        DataType: text
+        Description: 'API Gateway Endpoint URL'
+        Name: '/${self:custom.region}/${self:custom.stage}/ApiGwEndpoint'
+        Tier: Standard
+        Type: String
+        Value: 
+          Fn::Join:
+            - ""
+            - - "https://"
+              - Ref: "ApiGatewayRestApi"
+              - ".execute-api.${self:custom.region}.amazonaws.com/${self:custom.stage}"
+              

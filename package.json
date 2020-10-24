@@ -16,7 +16,7 @@
     "start": "./start-server.sh",
     "stop": "./stop-server.sh",
     "deploy": "serverless deploy",
-    "test:deployed": "API_URL=`serverless info --verbose | grep '^ServiceEndpoint:' | grep -o 'https://.*'`; API_URL=$API_URL/api mocha",
+    "test:deployed": "API_URL=`serverless info --verbose ${STAGE:+--stage $STAGE} ${REGION:+--region $REGION} | grep '^ServiceEndpoint:' | grep -o 'https://.*'`; API_URL=$API_URL/api mocha",
     "build:docs": "jsdoc -d gh-pages/jsdoc src/ .jsdoc.summary.md",
     "postinstall": "serverless dynamodb install 2>&1 | awk 'NF'"
   },
@@ -27,9 +27,9 @@
     "mocha": "^6.2.2",
     "node-jre": "^0.2.3",
     "nyc": "^14.1.1",
-    "serverless": "^1.57.0",
-    "serverless-dynamodb-local": "0.2.35",
-    "serverless-offline": "^4.10.6",
+    "serverless": "^2.8.0",
+    "serverless-dynamodb-local": "^0.2.39",
+    "serverless-offline": "^6.8.0",
     "showdown": "^1.9.1"
   },
   "dependencies": {
