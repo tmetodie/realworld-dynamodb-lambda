@@ -23,4 +23,6 @@ phases:
       - echo Entered the post_build phase..
       - STAGE=$STAGE REGION=$REGION npm run test:deployed
       - |
-        serverless info --verbose ${STAGE:+--stage $STAGE} ${REGION:+--region $REGION} | grep '^ServiceEndpoint:' | grep -o 'https://.*'
+        ApiGwUrl=`serverless info --verbose --stage $STAGE --region $REGION | grep '^ServiceEndpoint:' | grep -o 'https://.*'`
+        aws ssm put-parameter --name "/$REGION/$STAGE/" --description "API Gateway URL - $REGION $STAGE" --value "$ApiGwUrl"  --type "String" --overwrite --tier "Standard" \
+        --data-type "text" --tags "[{\"Key\": \"Region\",\"Value\": \"$REGION\"},{\"Key\": \"Environment\",\"Value\": \"$STAGE\"},{\"Key\": \"Project\",\"Value\": \"$PROJECT\"}]"
