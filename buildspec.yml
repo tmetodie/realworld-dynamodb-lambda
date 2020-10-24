@@ -22,7 +22,13 @@ phases:
     commands:
       - echo Entered the post_build phase..
       - |
-        STAGE=$STAGE REGION=$REGION npm run test:deployed
+        echo Checking if Build stage succeeded
+        if [[ $CODEBUILD_BUILD_SUCCEEDING -eq 0 ]]; then
+          echo "Build stage has failed. Exiting."
+          exit 1
+        fi
+      - echo "Proceeding with Post-Build stage."
+      - STAGE=$STAGE REGION=$REGION npm run test:deployed
       - |
         ApiGwUrl=`serverless info --verbose --stage $STAGE --region $REGION | grep '^ServiceEndpoint:' | grep -o 'https://.*'`
         aws ssm put-parameter --name "/$REGION/$STAGE/" --description "API Gateway URL - $REGION $STAGE" --value "$ApiGwUrl"  --type "String" --overwrite --tier "Standard" \
