@@ -33,3 +33,4 @@ phases:
         ApiGwUrl=`serverless info --verbose --stage $STAGE --region $AWS_DEFAULT_REGION | grep '^ServiceEndpoint:' | grep -o 'https://.*'`
         aws ssm put-parameter --name "/$AWS_DEFAULT_REGION/$STAGE/" --description "API Gateway URL - $AWS_DEFAULT_REGION $STAGE" --value "$ApiGwUrl"  --type "String" --overwrite --tier "Standard" \
         --data-type "text" --tags "[{\"Key\": \"Region\",\"Value\": \"$AWS_DEFAULT_REGION\"},{\"Key\": \"Environment\",\"Value\": \"$STAGE\"},{\"Key\": \"Project\",\"Value\": \"$PROJECT\"}]"
+        aws codebuild start-build --project-name "$WEB_CODEBUILD_NAME" --region $AWS_DEFAULT_REGION
