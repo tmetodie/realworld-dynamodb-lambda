@@ -8,6 +8,7 @@ phases:
     commands:
       - echo Entered the pre_build phase...
       - |
+        set -e
         npm install
         npm install -g serverless
         serverless plugin install --name serverless-dynamodb-local
@@ -16,12 +17,17 @@ phases:
     commands:
       - echo Entered the build phase...
       - echo Deploying the backend package...
-      - npm run deploy
+      - |
+        set -e
+        npm run deploy
   post_build:
     commands:
       - echo Entered the post_build phase..
-      - STAGE=$STAGE REGION=$REGION npm run test:deployed
       - |
+        set -e
+        STAGE=$STAGE REGION=$REGION npm run test:deployed
+      - |
+        set -e
         ApiGwUrl=`serverless info --verbose --stage $STAGE --region $REGION | grep '^ServiceEndpoint:' | grep -o 'https://.*'`
         aws ssm put-parameter --name "/$REGION/$STAGE/" --description "API Gateway URL - $REGION $STAGE" --value "$ApiGwUrl"  --type "String" --overwrite --tier "Standard" \
         --data-type "text" --tags "[{\"Key\": \"Region\",\"Value\": \"$REGION\"},{\"Key\": \"Environment\",\"Value\": \"$STAGE\"},{\"Key\": \"Project\",\"Value\": \"$PROJECT\"}]"
