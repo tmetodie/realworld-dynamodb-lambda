@@ -29,7 +29,6 @@ phases:
           exit 1
         fi
       - echo "Proceeding with Post-Build stage."
-      - STAGE=$STAGE REGION=$AWS_DEFAULT_REGION npm run test:deployed
       - |
         ApiGwUrl=`serverless info --verbose --stage $STAGE --region $AWS_DEFAULT_REGION | grep '^ServiceEndpoint:' | grep -o 'https://.*'`
         aws ssm put-parameter --name "/$AWS_DEFAULT_REGION/$STAGE/" --description "API Gateway URL - $AWS_DEFAULT_REGION $STAGE" --value "$ApiGwUrl"  --type "String" --overwrite --tier "Standard" \
