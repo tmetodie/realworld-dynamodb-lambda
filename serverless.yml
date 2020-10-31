@@ -3,7 +3,7 @@ service: realworld
 provider:
   name: aws
   runtime: nodejs10.x
-  region: us-east-1
+  region: {{AWS_DEFAULT_REGION}}
   stackName: ${self:service.name}-${self:custom.region}-${self:custom.stage}
   environment:
     DYNAMODB_NAMESPACE: ${opt:stage, "dev"}

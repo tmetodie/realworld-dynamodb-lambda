@@ -12,6 +12,7 @@ phases:
         npm install -g serverless
         serverless plugin install --name serverless-dynamodb-local
         serverless plugin install --name serverless-offline
+      - sed -i "s/{{AWS_DEFAULT_REGION}}/$AWS_DEFAULT_REGION/g" serverless.yml 
   build:
     commands:
       - echo Entered the build phase...
