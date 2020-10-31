@@ -17,6 +17,10 @@ provider:
         - dynamodb:UpdateItem
         - dynamodb:DeleteItem
       Resource: "arn:aws:dynamodb:${opt:region, self:provider.region}:*:table/*"
+    - Effect: Allow
+      Action:
+        - iam:GetRole
+      Resource: "arn:aws:iam::*:role/*"
     - Effect: "Allow"
       Action:
         - "s3:PutObject"
