@@ -13,6 +13,7 @@ phases:
         npm install -g serverless
         serverless plugin install --name serverless-dynamodb-local
         serverless plugin install --name serverless-offline
+      - npm run test
   build:
     commands:
       - echo Entered the build phase...
