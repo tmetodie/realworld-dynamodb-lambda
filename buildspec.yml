@@ -32,6 +32,11 @@ phases:
       - |
         ApiGwUrl=`serverless info --verbose --stage ${STAGE,,} --region $AWS_DEFAULT_REGION | grep '^ServiceEndpoint:' | grep -o 'https://.*'`
         aws configure set cli_follow_urlparam false
-        aws ssm put-parameter --name "/${AWS_DEFAULT_REGION}/${STAGE,,}/ApiGwEndpoint" --description "API Gateway URL - $AWS_DEFAULT_REGION ${STAGE,,}" --value "$ApiGwUrl"  --type "String" --overwrite --tier "Standard" \
-        --data-type "text"
+        aws ssm put-parameter --name "/${AWS_DEFAULT_REGION}/${STAGE,,}/ApiGwEndpoint" --description "API Gateway URL - $AWS_DEFAULT_REGION ${STAGE,,}" \
+        --value "$ApiGwUrl"  --type "String" --overwrite --tier "Standard" --data-type "text"
+        if [[ $? -ne 0 ]]; then
+        echo "Post-Build stage has failed. Exiting."
+        exit 1
+        fi
+        aws codebuild start-build --project-name "$WEB_CODEBUILD_NAME" --region $AWS_DEFAULT_REGION
         
