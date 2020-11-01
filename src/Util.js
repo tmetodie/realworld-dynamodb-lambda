@@ -40,7 +40,7 @@ module.exports = {
   },
 
   getTableName(aName) {
-    return `realworld-${process.env.DYNAMODB_NAMESPACE}-${aName}`;
+    return `realworld-${process.env.AWS_REGION}-${process.env.DYNAMODB_NAMESPACE}-${aName}`;
   },
 
   envelop,
@@ -62,7 +62,9 @@ function envelop(res, statusCode = 200) {
     statusCode,
     headers: {
       'Access-Control-Allow-Origin': '*',
-      'Access-Control-Allow-Credentials': true
+      'Access-Control-Allow-Credentials': true,
+      "Access-Control-Allow-Headers" : "Content-Type",
+      "Access-Control-Allow-Methods": "OPTIONS,POST,GET"
     },
     body,
   };
